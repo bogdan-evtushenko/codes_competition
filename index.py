@@ -143,9 +143,19 @@ class App(QMainWindow, AppUi, AppScripts):
             self.ttt_algorithm_list.appendPlainText('Ничья!')
         else:
             self.ttt_algorithm_list.appendPlainText(f'{self.ttt_rating_table[0][0]} - победитель!')
-        for i in range(len(self.ttt_rating_table)):
+
+        self.ttt_rating_table.append(['', ''])
+        iter_place = 1
+
+        for i in range(len(self.ttt_rating_table) - 1):
             name, score = self.ttt_rating_table[i]
-            self.ttt_algorithm_list.appendPlainText(f'{i + 1} место - {name}: {score} баллов')
+            count_winners = [score for _, score in self.ttt_rating_table].count(score)
+            win_place = f'{iter_place}-{iter_place + count_winners - 1}' if count_winners > 1 else f'{iter_place}'
+            self.ttt_algorithm_list.appendPlainText(f'{win_place} место - {name}: {score} баллов')
+            if self.ttt_rating_table[i][1] != self.ttt_rating_table[i + 1][1]:
+                iter_place += count_winners
+
+        self.ttt_rating_table.pop()
 
         self.ttt_game_back.setDisabled(False)
         self.ttt_restart.setDisabled(False)
@@ -172,7 +182,7 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_restart.setDisabled(False)
 
     def tictactoeOpenFile(self):
-        nickname_availability, confirm = True, False
+        nickname_availability, confirm, nickname = True, False, ''
         while nickname_availability:
             nickname, confirm = QInputDialog.getText(self, 'Ввод', 'Название алгоритма:',
                                                      text=f'Algorithm{len(self.ttt_algorithms_array)+1}')

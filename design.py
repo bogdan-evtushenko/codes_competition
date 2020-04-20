@@ -234,7 +234,8 @@ class AppUi(AppScripts):
                     child.setText(self._translate("App", f'{self.ttt_game_matrix[i][j]}'.upper()))
 
         if self.tictactoeCheckWin():
-            print(self.ttt_end_game_result)
+            #print(self.ttt_end_game_result)
+            pass
         else:
             self.nextMove()
             self.tictactoeSetCurrentMoveLine()

@@ -1,9 +1,6 @@
 def algorithm(matrix, height, width, player):
-	for i in range(height):
-		for j in range(width):
-			if matrix[i][j] == '-1' and j % 3 == 0:
-				matrix[i][j] = player
-				return matrix
-		if matrix[i][j] == '-1':
+	for i in range(height - 1, -1, -1):
+		for j in range(width - 1, -1, -1):
+			if matrix[i][j] == '-1':
 				matrix[i][j] = player
 				return matrix
