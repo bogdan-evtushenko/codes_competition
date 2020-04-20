@@ -16,6 +16,7 @@ class AppUi(AppScripts):
         self.start_page.setObjectName("start_page")
 
         self.verticalLayout_StartPage = QtWidgets.QVBoxLayout(self.start_page)
+        self.verticalLayout_StartPage.setContentsMargins(150, 0, 150, 0)
         self.verticalLayout_StartPage.setObjectName("verticalLayout_StartPage")
 
         self.project_name = QtWidgets.QLabel(self.start_page)
@@ -32,6 +33,7 @@ class AppUi(AppScripts):
         self.games_list.setWidget(0, QtWidgets.QFormLayout.SpanningRole, self.games_list_header)
 
         self.games_list_tictactoe = QtWidgets.QPushButton(self.start_page)
+        self.games_list_tictactoe.setAutoDefault(True)
         self.games_list_tictactoe.setObjectName("games_list_tictactoe")
         self.games_list.setWidget(1, QtWidgets.QFormLayout.SpanningRole, self.games_list_tictactoe)
 
@@ -41,6 +43,7 @@ class AppUi(AppScripts):
         self.games_list.setWidget(2, QtWidgets.QFormLayout.SpanningRole, self.games_list_other)
 
         self.exit = QtWidgets.QPushButton(self.start_page)
+        self.exit.setAutoDefault(True)
         self.exit.setObjectName("exit")
         self.games_list.setWidget(3, QtWidgets.QFormLayout.SpanningRole, self.exit)
 
@@ -104,6 +107,7 @@ class AppUi(AppScripts):
         self.verticalLayout_TicTacToeStartPage.addLayout(self.ttt_inputs)
 
         self.ttt_back = QtWidgets.QPushButton(self.tictactoe_start_page)
+        self.ttt_back.setAutoDefault(True)
         self.ttt_back.setObjectName("ttt_back")
         self.verticalLayout_TicTacToeStartPage.addWidget(self.ttt_back)
 
@@ -113,10 +117,10 @@ class AppUi(AppScripts):
         self.verticalLayout_Body.addWidget(self.tictactoe_start_page)
 
         self.ttt_game_name.setText(self._translate("App", "Крестики-Нолики"))
-        self.ttt_width_line.setPlaceholderText(self._translate("App", "Ширина"))
-        self.ttt_height_line.setPlaceholderText(self._translate("App", "Высота"))
-        self.ttt_win_cnt_line.setPlaceholderText(self._translate("App", "Количество подряд идущих для победы"))
-        self.ttt_game_speed_line.setPlaceholderText(self._translate("App", "Скорость игры (мс)"))
+        self.ttt_width_line.setPlaceholderText(self._translate("App", "Ширина (по умолчанию 3)"))
+        self.ttt_height_line.setPlaceholderText(self._translate("App", "Высота (по умолчанию 3)"))
+        self.ttt_win_cnt_line.setPlaceholderText(self._translate("App", "Количество подряд идущих для победы (по умолчанию 3)"))
+        self.ttt_game_speed_line.setPlaceholderText(self._translate("App", "Скорость игры (мс) (по умолчанию 100)"))
         self.ttt_start.setText(self._translate("App", "Старт"))
         self.ttt_back.setText(self._translate("App", "Назад"))
 

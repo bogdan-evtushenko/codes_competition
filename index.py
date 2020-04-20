@@ -37,7 +37,19 @@ class App(QMainWindow, AppUi, AppScripts):
         self.tictactoe_start_page.hide()
 
     def tictactoeStart(self):
-        check = lambda string: string == '' or any(char.isalpha() for char in string) or int(string)<0
+        check = lambda string: any(char.isalpha() for char in string) or int(string)<0
+
+        if self.ttt_width_line.text() == '':
+            self.ttt_width_line.setText('3')
+
+        if self.ttt_height_line.text() == '':
+            self.ttt_height_line.setText('3')
+
+        if self.ttt_win_cnt_line.text() == '':
+            self.ttt_win_cnt_line.setText('3')
+
+        if self.ttt_game_speed_line.text() == '':
+            self.ttt_game_speed_line.setText('100')
 
         if check(self.ttt_width_line.text()) or check(self.ttt_height_line.text()) or check(self.ttt_win_cnt_line.text()) or check(self.ttt_game_speed_line.text()):
             self.ttt_start.setDisabled(True)
@@ -92,7 +104,7 @@ class App(QMainWindow, AppUi, AppScripts):
         if len(self.ttt_algorithms_array) < 2:
             self.ttt_compare.setDisabled(True)
             self.showError("Недостаточно алгоритмов для сравнения!")
-            QTest.qWait(100)#ms
+            QTest.qWait(150)#ms
             self.ttt_compare.setDisabled(False)
             return False
 
