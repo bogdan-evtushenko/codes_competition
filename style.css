@@ -67,8 +67,7 @@
     font-size: 20px;
 }
 
-#ttt_current_move_label, #ttt_current_winner_label {
-    height: 10px;
+#ttt_current_move_label, #ttt_step_by_step_mode, #ttt_current_winner_label {
     font-size: 20px;
     margin: 10px 0;
 }

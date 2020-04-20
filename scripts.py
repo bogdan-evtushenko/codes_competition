@@ -11,6 +11,7 @@ class AppScripts(object):
         self.ttt_end_game_result = ''
         self.ttt_algorithms_array = []
         self.ttt_rating_table = []
+        self.ttt_source_rating_table = []
         self.ttt_game_speed = 100  # ms
         self.ttt_game_speed_dir = {
             'Очень медленно': 500,
@@ -19,6 +20,11 @@ class AppScripts(object):
             'Быстро': 40,
             'Очень быстро': 20
         }
+        self.ttt_first_player  = 'x'
+        self.ttt_second_player = 'o'
+        self.ttt_iterator = 0
+        self.ttt_alg_num1 = 0
+        self.ttt_alg_num2 = 1
 
     def nextMove(self):
         #print(' - nextMove run')

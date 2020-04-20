@@ -115,12 +115,17 @@ class App(QMainWindow, AppUi, AppScripts):
             self.ttt_compare.setDisabled(False)
             return False
 
+        if self.ttt_step_by_step_mode.isChecked():
+            self.tictactoeStepByStepCompareStart()
+            return False
+
         self.tictactoeSetAlgorithmsList()
 
         self.ttt_compare.setDisabled(True)
         self.ttt_add_algorithm.setDisabled(True)
         self.ttt_game_back.setDisabled(True)
         self.ttt_restart.setDisabled(True)
+        self.ttt_delete_all_algorithms.setDisabled(True)
 
         first_player, second_player = 'x', 'o'
         for alg_num1 in range(len(self.ttt_algorithms_array)):
@@ -137,52 +142,107 @@ class App(QMainWindow, AppUi, AppScripts):
 
                     first_player, second_player = second_player, first_player
 
-                    self.ttt_game_matrix = [['-1'] * self.ttt_width for i in range(self.ttt_height)]
-                    self.ttt_current_player = 'x'
-                    self.ttt_move_number = 0
-                    self.ttt_end_game_result = ''
+                    self.tictactoeSetDefaultValues()
 
                     self.tictactoeClearField()
 
-        self.ttt_algorithm_list.setPlainText('')
-        self.ttt_rating_table.sort(key=lambda x: x[1], reverse=True)
-        if self.ttt_rating_table[0][1] == self.ttt_rating_table[1][1]:
-            self.ttt_algorithm_list.appendPlainText('Ничья!')
-        else:
-            self.ttt_algorithm_list.appendPlainText(f'{self.ttt_rating_table[0][0]} - победитель!')
-
-        self.ttt_rating_table.append(['', ''])
-        iter_place = 1
-
-        for i in range(len(self.ttt_rating_table) - 1):
-            name, score = self.ttt_rating_table[i]
-            count_winners = [score for _, score in self.ttt_rating_table].count(score)
-            win_place = f'{iter_place}-{iter_place + count_winners - 1}' if count_winners > 1 else f'{iter_place}'
-            self.ttt_algorithm_list.appendPlainText(f'{win_place} место - {name}: {score} баллов')
-            if self.ttt_rating_table[i][1] != self.ttt_rating_table[i + 1][1]:
-                iter_place += count_winners
-
-        self.ttt_rating_table.pop()
+        self.tictactoeGetWinners()
 
         self.ttt_game_back.setDisabled(False)
         self.ttt_restart.setDisabled(False)
+        self.ttt_delete_all_algorithms.setDisabled(False)
 
+    def tictactoeStepByStepComparator(self, first_player, second_player, alg_num1, alg_num2):
+        if self.ttt_end_game_result == '':
+            first_algorithm_module = importlib.import_module(f'algorithms.{self.ttt_algorithms_array[alg_num1]}')
+            second_algorithm_module = importlib.import_module(f'algorithms.{self.ttt_algorithms_array[alg_num2]}')
+            if self.ttt_current_player == first_player:
+                self.ttt_game_matrix = first_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
+                                                                        self.ttt_width, first_player)
+            else:
+                self.ttt_game_matrix = second_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
+                                                                         self.ttt_width, second_player)
+            self.tictactoeRefreshGameField(App)
+
+        else:
+            winner_name = self.ttt_rating_table[alg_num1][0] if self.ttt_current_player == first_player else self.ttt_rating_table[alg_num2][0]
+            winner_num = alg_num1 if self.ttt_current_player == first_player else alg_num2
+            if self.ttt_end_game_result != 'draw':
+                self.ttt_rating_table[winner_num][1] += 3
+                self.ttt_current_winner_label.setText(
+                    self._translate("App", f"Победитель - {winner_name}"f"({self.ttt_current_player.upper()})"))
+            else:
+                self.ttt_rating_table[alg_num1][1] += 1
+                self.ttt_rating_table[alg_num2][1] += 1
+                self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
+
+    def tictactoeStepByStepCompare(self):
+        if self.ttt_end_game_result != '':
+            self.ttt_first_player, self.ttt_second_player = self.ttt_second_player, self.ttt_first_player
+            self.tictactoeSetDefaultValues()
+            self.tictactoeClearField()
+            self.ttt_iterator += 1
+            if self.ttt_iterator == 2:
+                self.ttt_alg_num2 += 1
+                self.ttt_iterator = 0
+                if self.ttt_alg_num2 == len(self.ttt_algorithms_array):
+                    self.ttt_alg_num1 += 1
+                    self.ttt_alg_num2 = self.ttt_alg_num1 + 1
+                    if self.ttt_alg_num2 == len(self.ttt_algorithms_array):
+                        self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
+
+                        self.ttt_compare.setDisabled(True)
+                        self.ttt_game_back.setDisabled(False)
+                        self.ttt_restart.setDisabled(False)
+                        self.ttt_delete_all_algorithms.setDisabled(False)
+
+                        self.ttt_compare.clicked.disconnect()
+                        self.ttt_compare.clicked.connect(self.tictactoeCompare)
+
+                        self.tictactoeGetWinners()
+                        return False
+
+        print(f'{self.ttt_alg_num1+1}vs{self.ttt_alg_num2+1}')
+
+        self.ttt_current_winner_label.setText(
+            f'{self.ttt_rating_table[self.ttt_alg_num1][0]}({self.ttt_first_player.upper()}) '
+            f'vs {self.ttt_rating_table[self.ttt_alg_num2][0]}({self.ttt_second_player.upper()})')
+
+        self.tictactoeStepByStepComparator(self.ttt_first_player, self.ttt_second_player, self.ttt_alg_num1, self.ttt_alg_num2)
+        if self.ttt_end_game_result != '':
+            self.tictactoeStepByStepComparator(self.ttt_first_player, self.ttt_second_player, self.ttt_alg_num1, self.ttt_alg_num2)
+
+    def tictactoeStepByStepCompareStart(self):
+        self.ttt_compare.clicked.disconnect()
+        self.ttt_compare.clicked.connect(self.tictactoeStepByStepCompare)
+        self.ttt_compare.setText(self._translate("App", "Следующий шаг"))
+        self.ttt_add_algorithm.setDisabled(True)
+        self.ttt_game_back.setDisabled(True)
+        self.ttt_restart.setDisabled(True)
+        self.ttt_delete_all_algorithms.setDisabled(True)
+        self.ttt_first_player = 'x'
+        self.ttt_second_player = 'o'
+        self.ttt_iterator = 0
+        self.ttt_alg_num1 = 0
+        self.ttt_alg_num2 = 1
+        self.tictactoeStepByStepCompare()
 
     def tictactoeGameBack(self):
         self.tictactoe_start_page.show()
         self.tictactoe_game_page.hide()
 
     def tictactoeGameRestart(self):
-        self.ttt_game_matrix = [['-1'] * self.ttt_width for i in range(self.ttt_height)]
-        self.ttt_current_player = 'x'
-        self.ttt_move_number = 0
-        self.ttt_end_game_result = ''
+        self.tictactoeSetDefaultValues()
+
+        self.ttt_rating_table = self.ttt_source_rating_table.copy()
 
         self.tictactoeSetAlgorithmsList()
 
         for i in range(len(self.ttt_rating_table)):
             self.ttt_rating_table[i][1] = 0
+
         self.tictactoeClearField()
+
         self.ttt_compare.setDisabled(False)
         self.ttt_add_algorithm.setDisabled(False)
         self.ttt_game_back.setDisabled(False)
@@ -209,6 +269,7 @@ class App(QMainWindow, AppUi, AppScripts):
                 file_name = QUrl.fromLocalFile(algorithm_file).fileName().split('.')[0]
                 self.ttt_algorithms_array.append(file_name)
                 self.ttt_rating_table.append([nickname, 0])
+                self.ttt_source_rating_table.append([nickname, 0])
                 self.tictactoeSetAlgorithmsList()
                 self.ttt_delete_all_algorithms.setDisabled(False)
                 #print(self.ttt_algorithms_array)
@@ -223,6 +284,7 @@ class App(QMainWindow, AppUi, AppScripts):
     def tictactoeDeleteAllAlgorithms(self):
         if self.showConfirm('Вы уверены что хотите удалить все алгоритмы?'):
             self.ttt_algorithms_array.clear()
+            self.ttt_source_rating_table.clear()
             self.ttt_rating_table.clear()
             self.tictactoeSetAlgorithmsList()
             self.ttt_delete_all_algorithms.setDisabled(True)

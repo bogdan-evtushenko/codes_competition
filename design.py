@@ -177,6 +177,10 @@ class AppUi(AppScripts):
         self.ttt_current_move_label.setObjectName("ttt_current_move_label")
         self.ttt_game_info.addWidget(self.ttt_current_move_label)
 
+        self.ttt_step_by_step_mode = QtWidgets.QCheckBox(self.tictactoe_game_page)
+        self.ttt_step_by_step_mode.setObjectName("ttt_step_by_step_mode")
+        self.ttt_game_info.addWidget(self.ttt_step_by_step_mode)
+
         self.ttt_current_winner_label = QtWidgets.QLabel(self.tictactoe_game_page)
         self.ttt_current_winner_label.setMaximumHeight(50)
         self.ttt_current_winner_label.setObjectName("ttt_current_winner_label")
@@ -257,6 +261,7 @@ class AppUi(AppScripts):
         self.ttt_menu_bar.addAction(self.ttt_speed_menu.menuAction())
 
         self.ttt_current_move_label.setText(self._translate("App", "Текущий ход: X"))
+        self.ttt_step_by_step_mode.setText(self._translate("App", "Пошаговый режим"))
         self.ttt_current_winner_label.setText(self._translate("App", ""))
         self.ttt_add_algorithm.setText(self._translate("App", "Добавить Алгоритм"))
         self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
@@ -373,6 +378,33 @@ class AppUi(AppScripts):
         for item, _ in self.ttt_rating_table:
             algorithms_list += f'\n - {item}'
         self.ttt_algorithm_list.setPlainText(f'Алгоритмы: {algorithms_list}')
+
+    def tictactoeGetWinners(self):
+        self.ttt_algorithm_list.setPlainText('')
+        self.ttt_rating_table.sort(key=lambda x: x[1], reverse=True)
+        if self.ttt_rating_table[0][1] == self.ttt_rating_table[1][1]:
+            self.ttt_algorithm_list.appendPlainText('Ничья!')
+        else:
+            self.ttt_algorithm_list.appendPlainText(f'{self.ttt_rating_table[0][0]} - победитель!')
+
+        self.ttt_rating_table.append(['', ''])
+        iter_place = 1
+
+        for i in range(len(self.ttt_rating_table) - 1):
+            name, score = self.ttt_rating_table[i]
+            count_winners = [score for _, score in self.ttt_rating_table].count(score)
+            win_place = f'{iter_place}-{iter_place + count_winners - 1}' if count_winners > 1 else f'{iter_place}'
+            self.ttt_algorithm_list.appendPlainText(f'{win_place} место - {name}: {score} баллов')
+            if self.ttt_rating_table[i][1] != self.ttt_rating_table[i + 1][1]:
+                iter_place += count_winners
+
+        self.ttt_rating_table.pop()
+
+    def tictactoeSetDefaultValues(self):
+        self.ttt_game_matrix = [['-1'] * self.ttt_width for i in range(self.ttt_height)]
+        self.ttt_current_player = 'x'
+        self.ttt_move_number = 0
+        self.ttt_end_game_result = ''
 
     #-----------------------------TicTacToe-Game-Page-End--------------------------------------#
 
