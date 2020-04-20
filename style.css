@@ -1,0 +1,81 @@
+/* Start Page */
+
+#project_name {
+    font-size: 60px;
+}
+
+#games_list_header {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+#games_list_tictactoe, #games_list_other, #exit {
+    font-size: 20px;
+    padding: 10px;
+    /*color: #414141;*/
+    margin: 0 150px;
+}
+
+/* #games_list_tictactoe:hover {
+    color: #000;
+} */
+
+/* Start Page End */
+
+
+/* Tic Tac Toe Start Page */
+
+#ttt_game_name {
+    font-size: 60px;
+}
+
+#ttt_width_line, #ttt_height_line, #ttt_algorithms_line, #ttt_win_cnt_line, #ttt_start {
+    font-size: 20px;
+    padding: 10px;
+}
+
+/* #ttt_start, #ttt_back {
+    color: #414141;
+}
+
+#ttt_start:hover, #ttt_back:hover {
+    color: #000;
+} */
+
+#ttt_back {
+    font-size: 16px;
+    padding: 8px;
+    margin: 0 150px;
+}
+
+/* Tic Tac Toe Start Page End */
+
+
+/* Tic Tac Toe Game Page */
+
+#ttt_compare {
+    height: 100px;
+    width: 200px;
+    font-size: 18px;
+}
+
+#ttt_add_algorithm {
+    font-size: 20px;
+}
+
+#ttt_current_move_label, #ttt_current_winner_label {
+    height: 10px;
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+#ttt_game_back, #ttt_restart {
+    font-size: 16px;
+    padding: 6px;
+}
+
+#ttt_algorithm_list {
+    font-size: 18px;
+}
+
+/* Tic Tac Toe Game Page End */
