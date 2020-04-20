@@ -74,6 +74,7 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_game_back.clicked.connect(self.tictactoeGameBack)
         self.ttt_restart.clicked.connect(self.tictactoeGameRestart)
         self.ttt_add_algorithm.clicked.connect(self.tictactoeOpenFile)
+        self.ttt_delete_all_algorithms.clicked.connect(self.tictactoeDeleteAllAlgorithms)
 
         self.ttt_set_speed_normal.triggered.connect(lambda: self.tictactoeChangeGameSpeed(self.ttt_set_speed_normal))
         self.ttt_set_speed_slow.triggered.connect(lambda: self.tictactoeChangeGameSpeed(self.ttt_set_speed_slow))
@@ -217,6 +218,12 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_set_speed_normal.setDisabled(False)
         speed_object.setDisabled(True)
         self.ttt_game_speed = self.ttt_game_speed_dir[speed_object.text()]
+
+    def tictactoeDeleteAllAlgorithms(self):
+        if self.showConfirm('Вы уверены что хотите удалить все алгоритмы?'):
+            self.ttt_algorithms_array.clear()
+            self.ttt_rating_table.clear()
+            self.tictactoeSetAlgorithmsList()
 
     # -------Tic-Tac-Toe-Functions-End----------#
 

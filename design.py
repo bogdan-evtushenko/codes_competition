@@ -207,9 +207,14 @@ class AppUi(AppScripts):
         self.tictactoe_edit_menu.addWidget(self.ttt_game_back, 2, 2, 1, 1)
 
         self.ttt_algorithm_list = QtWidgets.QPlainTextEdit(self.tictactoe_game_page)
+        self.ttt_algorithm_list.setMaximumHeight(110)
         self.ttt_algorithm_list.setReadOnly(True)
         self.ttt_algorithm_list.setObjectName("ttt_algorithm_list")
-        self.tictactoe_edit_menu.addWidget(self.ttt_algorithm_list, 1, 0, 2, 1)
+        self.tictactoe_edit_menu.addWidget(self.ttt_algorithm_list, 1, 0, 1, 1)
+
+        self.ttt_delete_all_algorithms = QtWidgets.QPushButton(self.tictactoe_game_page)
+        self.ttt_delete_all_algorithms.setObjectName("ttt_delete_all_algorithms")
+        self.tictactoe_edit_menu.addWidget(self.ttt_delete_all_algorithms, 2, 0, 1, 1)
 
         self.ttt_restart = QtWidgets.QPushButton(self.tictactoe_game_page)
         self.ttt_restart.setObjectName("ttt_restart")
@@ -256,6 +261,7 @@ class AppUi(AppScripts):
         self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
         self.ttt_game_back.setText(self._translate("App", "Назад"))
         self.ttt_restart.setText(self._translate("App", "Рестарт"))
+        self.ttt_delete_all_algorithms.setText(self._translate("App", "Удалить все алгоритмы"))
         self.ttt_speed_menu.setTitle(self._translate("App", "Скорость"))
         self.ttt_set_speed_very_slow.setText(self._translate("App", "Очень медленно"))
         self.ttt_set_speed_slow.setText(self._translate("App", "Медленно"))
@@ -409,5 +415,14 @@ class AppUi(AppScripts):
         msg.setText(f'{text}\t')
         msg.setWindowTitle("Error")
         msg.exec_()
+
+    def showConfirm(self, text):
+        msg = QtWidgets.QMessageBox()
+        self.setWidgetIcons(msg)
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
+        msg.setText(f'{text}\t')
+        msg.setWindowTitle('Warning')
+        msg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        return msg.exec_() == QtWidgets.QMessageBox.Yes
 
     #-----------------------------Body-End-----------------------------------------------------#

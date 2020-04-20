@@ -73,7 +73,7 @@
     margin: 10px 0;
 }
 
-#ttt_game_back, #ttt_restart {
+#ttt_game_back, #ttt_restart, #ttt_delete_all_algorithms {
     font-size: 16px;
     padding: 6px;
 }
