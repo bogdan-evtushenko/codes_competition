@@ -210,6 +210,7 @@ class App(QMainWindow, AppUi, AppScripts):
                 self.ttt_algorithms_array.append(file_name)
                 self.ttt_rating_table.append([nickname, 0])
                 self.tictactoeSetAlgorithmsList()
+                self.ttt_delete_all_algorithms.setDisabled(False)
                 #print(self.ttt_algorithms_array)
 
     def tictactoeChangeGameSpeed(self, speed_object):
@@ -224,6 +225,9 @@ class App(QMainWindow, AppUi, AppScripts):
             self.ttt_algorithms_array.clear()
             self.ttt_rating_table.clear()
             self.tictactoeSetAlgorithmsList()
+            self.ttt_delete_all_algorithms.setDisabled(True)
+            self.ttt_add_algorithm.setDisabled(False)
+            self.ttt_compare.setDisabled(False)
 
     # -------Tic-Tac-Toe-Functions-End----------#
 
