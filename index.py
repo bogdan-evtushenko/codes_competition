@@ -48,10 +48,10 @@ class App(QMainWindow, AppUi, AppScripts):
         if self.ttt_win_cnt_line.text() == '':
             self.ttt_win_cnt_line.setText('3')
 
-        if self.ttt_game_speed_line.text() == '':
-            self.ttt_game_speed_line.setText('100')
+        #if self.ttt_game_speed_line.text() == '':
+        #    self.ttt_game_speed_line.setText('100')
 
-        if check(self.ttt_width_line.text()) or check(self.ttt_height_line.text()) or check(self.ttt_win_cnt_line.text()) or check(self.ttt_game_speed_line.text()):
+        if check(self.ttt_width_line.text()) or check(self.ttt_height_line.text()) or check(self.ttt_win_cnt_line.text()): #or check(self.ttt_game_speed_line.text()):
             self.ttt_start.setDisabled(True)
             self.showError("Введены некорректные данные!")
             QTest.qWait(100)#ms
@@ -68,12 +68,18 @@ class App(QMainWindow, AppUi, AppScripts):
         self.tictactoe_start_page.hide()
         self.renderTicTacToeGamePage(self)
         self.tictactoeGameRestart()
+        self.tictactoeChangeGameSpeed(self.ttt_set_speed_normal)
 
         self.ttt_compare.clicked.connect(self.tictactoeCompare)
         self.ttt_game_back.clicked.connect(self.tictactoeGameBack)
         self.ttt_restart.clicked.connect(self.tictactoeGameRestart)
         self.ttt_add_algorithm.clicked.connect(self.tictactoeOpenFile)
 
+        self.ttt_set_speed_normal.triggered.connect(lambda: self.tictactoeChangeGameSpeed(self.ttt_set_speed_normal))
+        self.ttt_set_speed_slow.triggered.connect(lambda: self.tictactoeChangeGameSpeed(self.ttt_set_speed_slow))
+        self.ttt_set_speed_very_slow.triggered.connect(lambda: self.tictactoeChangeGameSpeed(self.ttt_set_speed_very_slow))
+        self.ttt_set_speed_fast.triggered.connect(lambda : self.tictactoeChangeGameSpeed(self.ttt_set_speed_fast))
+        self.ttt_set_speed_very_fast.triggered.connect(lambda: self.tictactoeChangeGameSpeed(self.ttt_set_speed_very_fast))
 
     def tictactoeComparator(self, first_player, second_player, alg_num1, alg_num2):
         #print(' - tictactoeComparator run')
@@ -104,7 +110,7 @@ class App(QMainWindow, AppUi, AppScripts):
         if len(self.ttt_algorithms_array) < 2:
             self.ttt_compare.setDisabled(True)
             self.showError("Недостаточно алгоритмов для сравнения!")
-            QTest.qWait(150)#ms
+            QTest.qWait(self.ttt_game_speed*2)#ms
             self.ttt_compare.setDisabled(False)
             return False
 
@@ -204,6 +210,13 @@ class App(QMainWindow, AppUi, AppScripts):
                 self.ttt_rating_table.append([nickname, 0])
                 self.tictactoeSetAlgorithmsList()
                 #print(self.ttt_algorithms_array)
+
+    def tictactoeChangeGameSpeed(self, speed_object):
+        self.ttt_set_speed_very_fast.setDisabled(False), self.ttt_set_speed_fast.setDisabled(False),
+        self.ttt_set_speed_very_slow.setDisabled(False), self.ttt_set_speed_slow.setDisabled(False),
+        self.ttt_set_speed_normal.setDisabled(False)
+        speed_object.setDisabled(True)
+        self.ttt_game_speed = self.ttt_game_speed_dir[speed_object.text()]
 
     # -------Tic-Tac-Toe-Functions-End----------#
 

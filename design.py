@@ -92,12 +92,12 @@ class AppUi(AppScripts):
         self.ttt_win_cnt_line = QtWidgets.QLineEdit(self.tictactoe_start_page)
         self.ttt_win_cnt_line.setAlignment(QtCore.Qt.AlignCenter)
         self.ttt_win_cnt_line.setObjectName("ttt_win_cnt_line")
-        self.ttt_inputs.addWidget(self.ttt_win_cnt_line, 1, 0, 1, 1)
+        self.ttt_inputs.addWidget(self.ttt_win_cnt_line, 1, 0, 1, 2)
 
-        self.ttt_game_speed_line = QtWidgets.QLineEdit(self.tictactoe_start_page)
-        self.ttt_game_speed_line.setAlignment(QtCore.Qt.AlignCenter)
-        self.ttt_game_speed_line.setObjectName("ttt_win_cnt_line")
-        self.ttt_inputs.addWidget(self.ttt_game_speed_line, 1, 1, 1, 1)
+        #self.ttt_game_speed_line = QtWidgets.QLineEdit(self.tictactoe_start_page)
+        #self.ttt_game_speed_line.setAlignment(QtCore.Qt.AlignCenter)
+        #self.ttt_game_speed_line.setObjectName("ttt_win_cnt_line")
+        #self.ttt_inputs.addWidget(self.ttt_game_speed_line, 1, 1, 1, 1)
 
         self.ttt_start = QtWidgets.QPushButton(self.tictactoe_start_page)
         self.ttt_start.setAutoDefault(True)
@@ -120,7 +120,7 @@ class AppUi(AppScripts):
         self.ttt_width_line.setPlaceholderText(self._translate("App", "Ширина (по умолчанию 3)"))
         self.ttt_height_line.setPlaceholderText(self._translate("App", "Высота (по умолчанию 3)"))
         self.ttt_win_cnt_line.setPlaceholderText(self._translate("App", "Количество подряд идущих для победы (по умолчанию 3)"))
-        self.ttt_game_speed_line.setPlaceholderText(self._translate("App", "Скорость игры (мс) (по умолчанию 100)"))
+        #self.ttt_game_speed_line.setPlaceholderText(self._translate("App", "Скорость игры (мс) (по умолчанию 100)"))
         self.ttt_start.setText(self._translate("App", "Старт"))
         self.ttt_back.setText(self._translate("App", "Назад"))
 
@@ -134,7 +134,7 @@ class AppUi(AppScripts):
         self.ttt_width = int(self.ttt_width_line.text())
         self.ttt_height = int(self.ttt_height_line.text())
         self.ttt_win_cnt = int(self.ttt_win_cnt_line.text())
-        self.ttt_game_speed = int(self.ttt_game_speed_line.text())
+        #self.ttt_game_speed = int(self.ttt_game_speed_line.text())
 
         self.ttt_game_matrix = [['-1'] * self.ttt_width for i in range(self.ttt_height)]
         self.ttt_algorithms_array = []
@@ -218,12 +218,60 @@ class AppUi(AppScripts):
         self.verticalLayout_GamePage.addLayout(self.tictactoe_edit_menu)
         self.verticalLayout_Body.addWidget(self.tictactoe_game_page)
 
+        self.ttt_menu_bar = QtWidgets.QMenuBar(App)
+        self.ttt_menu_bar.setGeometry(QtCore.QRect(0, 0, 773, 21))
+        self.ttt_menu_bar.setObjectName("ttt_menu_bar")
+
+        self.ttt_speed_menu = QtWidgets.QMenu(self.ttt_menu_bar)
+        self.ttt_speed_menu.setObjectName("ttt_speed_menu")
+
+        App.setMenuBar(self.ttt_menu_bar)
+
+        self.ttt_set_speed_very_slow = QtWidgets.QAction(App)
+        self.ttt_set_speed_very_slow.setObjectName("ttt_set_speed_very_slow")
+
+        self.ttt_set_speed_slow = QtWidgets.QAction(App)
+        self.ttt_set_speed_slow.setObjectName("ttt_set_speed_slow")
+
+        self.ttt_set_speed_normal = QtWidgets.QAction(App)
+        self.ttt_set_speed_normal.setObjectName("ttt_set_speed_normal")
+
+        self.ttt_set_speed_fast = QtWidgets.QAction(App)
+        self.ttt_set_speed_fast.setObjectName("ttt_set_speed_fast")
+
+        self.ttt_set_speed_very_fast = QtWidgets.QAction(App)
+        self.ttt_set_speed_very_fast.setObjectName("ttt_set_speed_very_fast")
+
+        self.ttt_speed_menu.addAction(self.ttt_set_speed_very_slow)
+        self.ttt_speed_menu.addAction(self.ttt_set_speed_slow)
+        self.ttt_speed_menu.addAction(self.ttt_set_speed_normal)
+        self.ttt_speed_menu.addAction(self.ttt_set_speed_fast)
+        self.ttt_speed_menu.addAction(self.ttt_set_speed_very_fast)
+
+        self.ttt_menu_bar.addAction(self.ttt_speed_menu.menuAction())
+
         self.ttt_current_move_label.setText(self._translate("App", "Текущий ход: X"))
         self.ttt_current_winner_label.setText(self._translate("App", ""))
         self.ttt_add_algorithm.setText(self._translate("App", "Добавить Алгоритм"))
         self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
         self.ttt_game_back.setText(self._translate("App", "Назад"))
         self.ttt_restart.setText(self._translate("App", "Рестарт"))
+        self.ttt_speed_menu.setTitle(self._translate("App", "Скорость"))
+        self.ttt_set_speed_very_slow.setText(self._translate("App", "Очень медленно"))
+        self.ttt_set_speed_slow.setText(self._translate("App", "Медленно"))
+        self.ttt_set_speed_normal.setText(self._translate("App", "Нормально"))
+        self.ttt_set_speed_fast.setText(self._translate("App", "Быстро"))
+        self.ttt_set_speed_very_fast.setText(self._translate("App", "Очень быстро"))
+        self.ttt_set_speed_very_slow.setText(self._translate("App", "Очень медленно"))
+        self.ttt_set_speed_very_slow.setShortcut(self._translate("App", "Alt+1"))
+        self.ttt_set_speed_slow.setText(self._translate("App", "Медленно"))
+        self.ttt_set_speed_slow.setShortcut(self._translate("App", "Alt+2"))
+        self.ttt_set_speed_normal.setText(self._translate("App", "Нормально"))
+        self.ttt_set_speed_normal.setShortcut(self._translate("App", "Alt+3"))
+        self.ttt_set_speed_fast.setText(self._translate("App", "Быстро"))
+        self.ttt_set_speed_fast.setShortcut(self._translate("App", "Alt+4"))
+        self.ttt_set_speed_very_fast.setText(self._translate("App", "Очень быстро"))
+        self.ttt_set_speed_very_fast.setShortcut(self._translate("App", "Alt+5"))
 
     def tictactoeRefreshGameField(self, App):
         #print(' - refreshGameField run')
@@ -326,8 +374,8 @@ class AppUi(AppScripts):
         #print(' - renderBody run')
 
         App.setObjectName("App")
-        App.resize(1020, 740)
-        App.setMinimumSize(1020, 740)
+        App.resize(1024, 768)
+        App.setMinimumSize(800, 600)
         font = QtGui.QFont()
         font.setFamily("Roboto")
         App.setFont(font)

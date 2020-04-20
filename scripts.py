@@ -9,9 +9,16 @@ class AppScripts(object):
         self.ttt_current_player = 'x'
         self.ttt_game_matrix = [['-1']]
         self.ttt_end_game_result = ''
-        self.ttt_game_speed = 100#ms
         self.ttt_algorithms_array = []
         self.ttt_rating_table = []
+        self.ttt_game_speed = 100  # ms
+        self.ttt_game_speed_dir = {
+            'Очень медленно': 500,
+            'Медленно': 250,
+            'Нормально': 100,
+            'Быстро': 40,
+            'Очень быстро': 20
+        }
 
     def nextMove(self):
         #print(' - nextMove run')
