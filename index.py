@@ -172,10 +172,19 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_restart.setDisabled(False)
 
     def tictactoeOpenFile(self):
-        nickname, confirm = QInputDialog.getText(self, 'Ввод', 'Название алгоритма:',
-                                                 text=f'Algorithm №{len(self.ttt_algorithms_array)+1}')
+        nickname_availability, confirm = True, False
+        while nickname_availability:
+            nickname, confirm = QInputDialog.getText(self, 'Ввод', 'Название алгоритма:',
+                                                     text=f'Algorithm{len(self.ttt_algorithms_array)+1}')
+            if not confirm:
+                break
+
+            nickname_availability = nickname in [item for item, _ in self.ttt_rating_table]
+            if nickname_availability:
+                self.showError('Название алгоритма занято!')
+
         if confirm:
-            algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py *.txt)")
+            algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
             if algorithm_file != '':
                 if not algorithm_file in sys.path:
                     sys.path.insert(0, algorithm_file)

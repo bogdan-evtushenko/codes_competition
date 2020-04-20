@@ -315,8 +315,7 @@ class AppUi(AppScripts):
     def tictactoeSetAlgorithmsList(self):
         algorithms_list = ''
         for item, _ in self.ttt_rating_table:
-            algorithms_list += item + ', '
-        algorithms_list = algorithms_list[:-2]
+            algorithms_list += f'\n - {item}'
         self.ttt_algorithm_list.setPlainText(f'Алгоритмы: {algorithms_list}')
 
     #-----------------------------TicTacToe-Game-Page-End--------------------------------------#
