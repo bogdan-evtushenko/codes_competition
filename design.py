@@ -149,7 +149,7 @@ class AppUi(AppScripts):
         self.tictactoe_game_field = QtWidgets.QGridLayout()
         self.tictactoe_game_field.setObjectName("tictactoe_game_field")
         self.tictactoe_game_field.setSpacing(0)
-        self.tictactoe_game_field.setContentsMargins(220, 0, 220, 0)
+        self.tictactoe_game_field.setContentsMargins((220 - self.ttt_width*10), 0, (220 - self.ttt_width*10), 0)
 
         for i in range(self.ttt_height):
             for j in range(self.ttt_width):

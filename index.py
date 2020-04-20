@@ -172,7 +172,8 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_restart.setDisabled(False)
 
     def tictactoeOpenFile(self):
-        nickname, confirm = QInputDialog.getText(self, 'Ввод', 'Название алгоритма:')
+        nickname, confirm = QInputDialog.getText(self, 'Ввод', 'Название алгоритма:',
+                                                 text=f'Algorithm №{len(self.ttt_algorithms_array)+1}')
         if confirm:
             algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py *.txt)")
             if algorithm_file != '':
@@ -182,6 +183,7 @@ class App(QMainWindow, AppUi, AppScripts):
                 file_name = QUrl.fromLocalFile(algorithm_file).fileName().split('.')[0]
                 self.ttt_algorithms_array.append(file_name)
                 self.ttt_rating_table.append([nickname, 0])
+                self.tictactoeSetAlgorithmsList()
                 #print(self.ttt_algorithms_array)
 
     # -------Tic-Tac-Toe-Functions-End----------#
