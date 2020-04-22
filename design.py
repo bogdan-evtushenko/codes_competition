@@ -102,6 +102,7 @@ class AppUi(AppScripts):
         self.ttt_start = QtWidgets.QPushButton(self.tictactoe_start_page)
         self.ttt_start.setAutoDefault(True)
         self.ttt_start.setObjectName("ttt_start")
+        self.ttt_start.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.ttt_inputs.addWidget(self.ttt_start, 2, 0, 1, 2)
 
         self.verticalLayout_TicTacToeStartPage.addLayout(self.ttt_inputs)
@@ -137,8 +138,6 @@ class AppUi(AppScripts):
         #self.ttt_game_speed = int(self.ttt_game_speed_line.text())
 
         self.ttt_game_matrix = [['-1'] * self.ttt_width for i in range(self.ttt_height)]
-        self.ttt_algorithms_array = []
-        self.ttt_rating_table = []
 
         self.tictactoe_game_page = QtWidgets.QWidget(self.body)
         self.tictactoe_game_page.setObjectName("tictactoe_game_page")
@@ -164,6 +163,8 @@ class AppUi(AppScripts):
                 size_policy.setHeightForWidth(self.tictactoe_game_cell.sizePolicy().hasHeightForWidth())
                 self.tictactoe_game_cell.setSizePolicy(size_policy)
 
+                self.tictactoe_game_cell.setFocusPolicy(QtCore.Qt.NoFocus)
+
                 self.tictactoe_game_cell.clicked.connect(self.tictactoeCellClick)
 
                 self.tictactoe_game_field.addWidget(self.tictactoe_game_cell, i, j, 1, 1)
@@ -179,6 +180,7 @@ class AppUi(AppScripts):
 
         self.ttt_step_by_step_mode = QtWidgets.QCheckBox(self.tictactoe_game_page)
         self.ttt_step_by_step_mode.setObjectName("ttt_step_by_step_mode")
+        self.ttt_step_by_step_mode.setFocusPolicy(QtCore.Qt.NoFocus)
         self.ttt_game_info.addWidget(self.ttt_step_by_step_mode)
 
         self.ttt_current_winner_label = QtWidgets.QLabel(self.tictactoe_game_page)
@@ -201,29 +203,52 @@ class AppUi(AppScripts):
         self.ttt_add_algorithm.setSizePolicy(size_policy)
         self.ttt_add_algorithm.setObjectName("ttt_add_algorithm")
         self.tictactoe_edit_menu.addWidget(self.ttt_add_algorithm, 1, 2, 1, 1)
+        self.ttt_add_algorithm.setAutoDefault(True)
+
+        self.ttt_skip_buttons = QtWidgets.QVBoxLayout()
+        self.ttt_skip_buttons.setObjectName("verticalLayout")
+
+        self.ttt_skip_battle = QtWidgets.QPushButton(self.tictactoe_game_page)
+        self.ttt_skip_battle.setObjectName("ttt_skip_battle")
+        self.ttt_skip_battle.setAutoDefault(True)
+        self.ttt_skip_buttons.addWidget(self.ttt_skip_battle)
+
+        self.ttt_skip_game = QtWidgets.QPushButton(self.tictactoe_game_page)
+        self.ttt_skip_game.setObjectName("ttt_skip_game")
+        self.ttt_skip_game.setAutoDefault(True)
+        self.ttt_skip_buttons.addWidget(self.ttt_skip_game)
+
+        self.tictactoe_edit_menu.addLayout(self.ttt_skip_buttons, 1, 2, 1, 1)
+        self.ttt_skip_battle.hide()
+        self.ttt_skip_game.hide()
 
         self.ttt_compare = QtWidgets.QPushButton(self.tictactoe_game_page)
         self.ttt_compare.setObjectName("ttt_compare")
+        self.ttt_compare.setAutoDefault(True)
         self.tictactoe_edit_menu.addWidget(self.ttt_compare, 1, 1, 1, 1)
+
+        self.ttt_restart = QtWidgets.QPushButton(self.tictactoe_game_page)
+        self.ttt_restart.setObjectName("ttt_restart")
+        self.ttt_restart.setAutoDefault(True)
+        self.tictactoe_edit_menu.addWidget(self.ttt_restart, 2, 1, 1, 1)
 
         self.ttt_game_back = QtWidgets.QPushButton(self.tictactoe_game_page)
         self.ttt_game_back.setObjectName("ttt_game_back")
+        self.ttt_game_back.setAutoDefault(True)
         self.tictactoe_edit_menu.addWidget(self.ttt_game_back, 2, 2, 1, 1)
 
         self.ttt_algorithm_list = QtWidgets.QPlainTextEdit(self.tictactoe_game_page)
         self.ttt_algorithm_list.setMaximumHeight(110)
         self.ttt_algorithm_list.setReadOnly(True)
         self.ttt_algorithm_list.setObjectName("ttt_algorithm_list")
+        self.ttt_algorithm_list.setFocusPolicy(QtCore.Qt.NoFocus)
         self.tictactoe_edit_menu.addWidget(self.ttt_algorithm_list, 1, 0, 1, 1)
 
         self.ttt_delete_all_algorithms = QtWidgets.QPushButton(self.tictactoe_game_page)
         self.ttt_delete_all_algorithms.setObjectName("ttt_delete_all_algorithms")
+        self.ttt_delete_all_algorithms.setAutoDefault(True)
         self.tictactoe_edit_menu.addWidget(self.ttt_delete_all_algorithms, 2, 0, 1, 1)
         self.ttt_delete_all_algorithms.setDisabled(True)
-
-        self.ttt_restart = QtWidgets.QPushButton(self.tictactoe_game_page)
-        self.ttt_restart.setObjectName("ttt_restart")
-        self.tictactoe_edit_menu.addWidget(self.ttt_restart, 2, 1, 1, 1)
 
         self.verticalLayout_GamePage.addLayout(self.tictactoe_edit_menu)
         self.verticalLayout_Body.addWidget(self.tictactoe_game_page)
@@ -264,6 +289,8 @@ class AppUi(AppScripts):
         self.ttt_step_by_step_mode.setText(self._translate("App", "Пошаговый режим"))
         self.ttt_current_winner_label.setText(self._translate("App", ""))
         self.ttt_add_algorithm.setText(self._translate("App", "Добавить Алгоритм"))
+        self.ttt_skip_battle.setText(self._translate("App", "Закончить битву"))
+        self.ttt_skip_game.setText(self._translate("App", "Закончить турнир"))
         self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
         self.ttt_game_back.setText(self._translate("App", "Назад"))
         self.ttt_restart.setText(self._translate("App", "Рестарт"))
@@ -317,6 +344,8 @@ class AppUi(AppScripts):
             return False
         self.ttt_game_matrix[x][y] = self.ttt_current_player
         self.tictactoeRefreshGameField(self)
+        if self.ttt_end_game_result == 'draw':
+            self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
         #[print(*i) for i in self.ttt_game_matrix]
 
     def tictactoeSetCurrentMoveLine(self):
@@ -330,7 +359,7 @@ class AppUi(AppScripts):
         return True
 
     def tictactoeCheckWin(self):
-        if self.ttt_move_number == (self.ttt_width * self.ttt_height):
+        if self.ttt_move_number == (self.ttt_width * self.ttt_height) - 1:
             #self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
             self.ttt_end_game_result = 'draw'
             return True

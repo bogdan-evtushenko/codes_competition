@@ -31,13 +31,14 @@ class App(QMainWindow, AppUi, AppScripts):
     def tictactoeOpen(self):
         self.start_page.hide()
         self.tictactoe_start_page.show()
+        self.ttt_start.setFocus()
 
     def tictactoeBack(self):
         self.start_page.show()
         self.tictactoe_start_page.hide()
 
     def tictactoeStart(self):
-        check = lambda string: any(char.isalpha() for char in string) or int(string)<0
+        check = lambda string: len([item for item in string if item.isdigit()])!=len(string) or string=='0'
 
         if self.ttt_width_line.text() == '':
             self.ttt_width_line.setText('3')
@@ -69,6 +70,8 @@ class App(QMainWindow, AppUi, AppScripts):
         self.renderTicTacToeGamePage(self)
         self.tictactoeGameRestart()
         self.tictactoeChangeGameSpeed(self.ttt_set_speed_normal)
+
+        self.ttt_start.setDisabled(True)
 
         self.ttt_compare.clicked.connect(self.tictactoeCompare)
         self.ttt_game_back.clicked.connect(self.tictactoeGameBack)
@@ -191,10 +194,15 @@ class App(QMainWindow, AppUi, AppScripts):
                     if self.ttt_alg_num2 == len(self.ttt_algorithms_array):
                         self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
 
+                        self.ttt_skip_battle.hide()
+                        self.ttt_skip_game.hide()
+                        self.ttt_add_algorithm.show()
+
                         self.ttt_compare.setDisabled(True)
                         self.ttt_game_back.setDisabled(False)
                         self.ttt_restart.setDisabled(False)
                         self.ttt_delete_all_algorithms.setDisabled(False)
+                        self.ttt_step_by_step_mode.setDisabled(False)
 
                         self.ttt_compare.clicked.disconnect()
                         self.ttt_compare.clicked.connect(self.tictactoeCompare)
@@ -202,7 +210,7 @@ class App(QMainWindow, AppUi, AppScripts):
                         self.tictactoeGetWinners()
                         return False
 
-        print(f'{self.ttt_alg_num1+1}vs{self.ttt_alg_num2+1}')
+        #print(f'{self.ttt_alg_num1+1}vs{self.ttt_alg_num2+1}')
 
         self.ttt_current_winner_label.setText(
             f'{self.ttt_rating_table[self.ttt_alg_num1][0]}({self.ttt_first_player.upper()}) '
@@ -216,18 +224,38 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_compare.clicked.disconnect()
         self.ttt_compare.clicked.connect(self.tictactoeStepByStepCompare)
         self.ttt_compare.setText(self._translate("App", "Следующий шаг"))
+
+        self.ttt_add_algorithm.hide()
+        self.ttt_skip_game.show()
+        self.ttt_skip_battle.show()
+        self.ttt_skip_game.clicked.connect(self.tictactoeStepByStepSkipGame)
+        self.ttt_skip_battle.clicked.connect(self.tictactoeStepByStepSkipBattle)
+
         self.ttt_add_algorithm.setDisabled(True)
         self.ttt_game_back.setDisabled(True)
         self.ttt_restart.setDisabled(True)
         self.ttt_delete_all_algorithms.setDisabled(True)
+        self.ttt_step_by_step_mode.setDisabled(True)
+
         self.ttt_first_player = 'x'
         self.ttt_second_player = 'o'
         self.ttt_iterator = 0
         self.ttt_alg_num1 = 0
         self.ttt_alg_num2 = 1
+
         self.tictactoeStepByStepCompare()
 
+    def tictactoeStepByStepSkipBattle(self):
+        while self.ttt_end_game_result == '':
+            self.tictactoeStepByStepCompare()
+
+    def tictactoeStepByStepSkipGame(self):
+        while self.ttt_alg_num2 != len(self.ttt_algorithms_array):
+            self.tictactoeStepByStepCompare()
+
     def tictactoeGameBack(self):
+        self.ttt_start.setDisabled(False)
+
         self.tictactoe_start_page.show()
         self.tictactoe_game_page.hide()
 
@@ -256,12 +284,29 @@ class App(QMainWindow, AppUi, AppScripts):
             if not confirm:
                 break
 
-            nickname_availability = nickname in [item for item, _ in self.ttt_rating_table]
-            if nickname_availability:
+            if nickname in [item for item, _ in self.ttt_rating_table]:
                 self.showError('Название алгоритма занято!')
+                nickname_availability = True
+            elif nickname == '':
+                self.showError('Название алгоритма не может быть пустым!')
+                nickname_availability = True
+            else:
+                nickname_availability = False
 
         if confirm:
-            algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
+            error, algorithm_file = True, ''
+
+            while error:
+                algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
+                if algorithm_file != '':
+                    with open(algorithm_file, 'r') as file:
+                        if not 'def algorithm(matrix, height, width, player):' in file.read():
+                            self.showError('Несоответствие формата файла-алгоритма!')
+                        else:
+                            error = False
+                else:
+                    error = False
+
             if algorithm_file != '':
                 if not algorithm_file in sys.path:
                     sys.path.insert(0, algorithm_file)
