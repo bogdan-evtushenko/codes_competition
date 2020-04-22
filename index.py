@@ -38,33 +38,57 @@ class App(QMainWindow, AppUi, AppScripts):
         self.tictactoe_start_page.hide()
 
     def tictactoeStart(self):
-        check = lambda string: len([item for item in string if item.isdigit()])!=len(string) or string=='0'
-
-        if self.ttt_width_line.text() == '':
-            self.ttt_width_line.setText('3')
-
-        if self.ttt_height_line.text() == '':
-            self.ttt_height_line.setText('3')
-
-        if self.ttt_win_cnt_line.text() == '':
-            self.ttt_win_cnt_line.setText('3')
-
-        #if self.ttt_game_speed_line.text() == '':
-        #    self.ttt_game_speed_line.setText('100')
-
-        if check(self.ttt_width_line.text()) or check(self.ttt_height_line.text()) or check(self.ttt_win_cnt_line.text()): #or check(self.ttt_game_speed_line.text()):
+        digits_check = lambda string: len([item for item in string if item.isdigit()])!=len(string)
+        zero_check =  lambda string: string=='0'
+        one_check = lambda string: string=='1'
+        def showIncorrectData(text):
             self.ttt_start.setDisabled(True)
-            self.showError("Введены некорректные данные!")
+            self.showError(text)
             QTest.qWait(100)#ms
             self.ttt_start.setDisabled(False)
             return False
 
-        if int(self.ttt_win_cnt_line.text()) > min(int(self.ttt_width_line.text()), int(self.ttt_height_line.text())):
-            self.ttt_start.setDisabled(True)
-            self.showError("Введены некорректные данные!")
-            QTest.qWait(100)# ms
-            self.ttt_start.setDisabled(False)
-            return False
+        width = self.ttt_width_line.text()
+        height = self.ttt_height_line.text()
+        win_cnt = self.ttt_win_cnt_line.text()
+
+        if width == '':
+            self.ttt_width_line.setText('3')
+            width = self.ttt_width_line.text()
+
+        if height == '':
+            self.ttt_height_line.setText('3')
+            height = self.ttt_height_line.text()
+
+        if win_cnt == '':
+            self.ttt_win_cnt_line.setText('3')
+            win_cnt = self.ttt_win_cnt_line.text()
+
+        if digits_check(width):
+            return showIncorrectData('Ширина должна быть целым положительным числом!')
+        if zero_check(width):
+            return showIncorrectData('Ширина не может равняться нулю!')
+        if one_check(width):
+            return showIncorrectData('Ширина не может равняться единице!')
+
+        if digits_check(height):
+            return showIncorrectData('Высота должна быть целым положительным числом!')
+        if zero_check(height):
+            return showIncorrectData('Высота не может равняться нулю!')
+        if one_check(height):
+            return showIncorrectData('Высота не может равняться единице!')
+
+        if digits_check(win_cnt):
+            return showIncorrectData('Количество подряд идущих для победы должно быть '
+                                     'целым положительным числом!')
+        if zero_check(win_cnt):
+            return showIncorrectData('Количество подряд идущих для победы не может равняться нулю!')
+        if one_check(win_cnt):
+            return showIncorrectData('Количество подряд идущих для победы не может равняться единице!')
+
+        if int(win_cnt) > min(int(width), int(height)):
+            return showIncorrectData('Количество подряд идущих для победы не может быть '
+                                     'больше минимального размера поля!')
 
         self.tictactoe_start_page.hide()
         self.renderTicTacToeGamePage(self)
