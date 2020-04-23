@@ -23,8 +23,11 @@ class AppScripts(object):
         self.ttt_first_player  = 'x'
         self.ttt_second_player = 'o'
         self.ttt_iterator = 0
+        self.ttt_global_iterator = 1
         self.ttt_alg_num1 = 0
         self.ttt_alg_num2 = 1
+        self.ttt_is_skip_battle = False
+        self.ttt_is_skip_game = False
 
     def nextMove(self):
         #print(' - nextMove run')

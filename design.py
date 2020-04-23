@@ -227,6 +227,13 @@ class AppUi(AppScripts):
         self.ttt_compare.setAutoDefault(True)
         self.tictactoe_edit_menu.addWidget(self.ttt_compare, 1, 1, 1, 1)
 
+        self.ttt_compare_disabled = QtWidgets.QPushButton(self.tictactoe_game_page)
+        self.ttt_compare_disabled.setObjectName("ttt_compare")
+        self.ttt_compare_disabled.setAutoDefault(True)
+        self.tictactoe_edit_menu.addWidget(self.ttt_compare_disabled, 1, 1, 1, 1)
+        self.ttt_compare_disabled.setDisabled(True)
+        self.ttt_compare_disabled.hide()
+
         self.ttt_restart = QtWidgets.QPushButton(self.tictactoe_game_page)
         self.ttt_restart.setObjectName("ttt_restart")
         self.ttt_restart.setAutoDefault(True)
@@ -292,6 +299,7 @@ class AppUi(AppScripts):
         self.ttt_skip_battle.setText(self._translate("App", "Закончить битву"))
         self.ttt_skip_game.setText(self._translate("App", "Закончить турнир"))
         self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
+        self.ttt_compare_disabled.setText(self._translate("App", "Следующий шаг"))
         self.ttt_game_back.setText(self._translate("App", "Назад"))
         self.ttt_restart.setText(self._translate("App", "Рестарт"))
         self.ttt_delete_all_algorithms.setText(self._translate("App", "Удалить все алгоритмы"))
@@ -428,6 +436,8 @@ class AppUi(AppScripts):
                 iter_place += count_winners
 
         self.ttt_rating_table.pop()
+
+        self.ttt_algorithm_list.verticalScrollBar().setValue(0)
 
     def tictactoeSetDefaultValues(self):
         self.ttt_game_matrix = [['-1'] * self.ttt_width for i in range(self.ttt_height)]
