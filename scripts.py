@@ -16,10 +16,11 @@ class AppScripts(object):
         self.ttt_game_speed_dir = {
             'Очень медленно': 500,
             'Медленно': 250,
-            'Нормально': 100,
-            'Быстро': 40,
+            'Нормально': 150,
+            'Быстро': 80,
             'Очень быстро': 20
         }
+        self.ttt_game_speed_backup = 100
         self.ttt_first_player  = 'x'
         self.ttt_second_player = 'o'
         self.ttt_iterator = 0

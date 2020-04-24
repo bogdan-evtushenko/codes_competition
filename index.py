@@ -149,11 +149,14 @@ class App(QMainWindow, AppUi, AppScripts):
         self.tictactoeSetAlgorithmsList()
 
         self.ttt_compare.setDisabled(True)
-        self.ttt_add_algorithm.setDisabled(True)
         self.ttt_game_back.setDisabled(True)
         self.ttt_restart.setDisabled(True)
         self.ttt_delete_all_algorithms.setDisabled(True)
         self.ttt_step_by_step_mode.setDisabled(True)
+
+        self.ttt_add_algorithm.setText(self._translate("App", "Закончить турнир"))
+        self.ttt_add_algorithm.clicked.disconnect()
+        self.ttt_add_algorithm.clicked.connect(self.tictactoeSkipGame)
 
         first_player, second_player = 'x', 'o'
         for alg_num1 in range(len(self.ttt_algorithms_array)):
@@ -166,7 +169,7 @@ class App(QMainWindow, AppUi, AppScripts):
                                                           f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})')
 
                     self.tictactoeComparator(first_player, second_player, alg_num1, alg_num2)
-                    QTest.qWait(self.ttt_game_speed*3)#ms
+                    QTest.qWait(self.ttt_game_speed*4)#ms
 
                     first_player, second_player = second_player, first_player
 
@@ -176,9 +179,20 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.tictactoeGetWinners()
 
+        self.ttt_add_algorithm.setText(self._translate("App", "Добавить Алгоритм"))
+        self.ttt_add_algorithm.setDisabled(True)
+        self.ttt_add_algorithm.clicked.disconnect()
+        self.ttt_add_algorithm.clicked.connect(self.tictactoeOpenFile)
         self.ttt_game_back.setDisabled(False)
         self.ttt_restart.setDisabled(False)
         self.ttt_delete_all_algorithms.setDisabled(False)
+
+    def tictactoeSkipGame(self):
+        self.ttt_game_speed = 0
+        self.ttt_add_algorithm.setText(self._translate("App", "Добавить Алгоритм"))
+        self.ttt_add_algorithm.setDisabled(True)
+        self.ttt_add_algorithm.clicked.disconnect()
+        self.ttt_add_algorithm.clicked.connect(self.tictactoeOpenFile)
 
     def tictactoeStepByStepFirstStep(self):
         #print(' - tictactoeStepByStepFirstStep run')
@@ -219,7 +233,7 @@ class App(QMainWindow, AppUi, AppScripts):
                 self.ttt_compare.setText(self._translate("App", "Показать результаты"))
 
             if self.ttt_is_skip_game:
-                QTest.qWait(self.ttt_game_speed*3)
+                QTest.qWait(self.ttt_game_speed*4)
 
 
     def tictactoeStepByStepCompare(self):
@@ -342,6 +356,8 @@ class App(QMainWindow, AppUi, AppScripts):
 
     def tictactoeGameRestart(self):
         self.tictactoeSetDefaultValues()
+        if self.ttt_game_speed != self.ttt_game_speed_backup:
+            self.ttt_game_speed = self.ttt_game_speed_backup
 
         self.ttt_rating_table = self.ttt_source_rating_table.copy()
 
@@ -407,6 +423,7 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_set_speed_normal.setDisabled(False)
         speed_object.setDisabled(True)
         self.ttt_game_speed = self.ttt_game_speed_dir[speed_object.text()]
+        self.ttt_game_speed_backup = self.ttt_game_speed
 
     def tictactoeDeleteAllAlgorithms(self):
         if self.showConfirm('Вы уверены что хотите удалить все алгоритмы?'):

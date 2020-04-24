@@ -255,7 +255,8 @@ class AppUi(AppScripts):
         self.ttt_delete_all_algorithms.setObjectName("ttt_delete_all_algorithms")
         self.ttt_delete_all_algorithms.setAutoDefault(True)
         self.tictactoe_edit_menu.addWidget(self.ttt_delete_all_algorithms, 2, 0, 1, 1)
-        self.ttt_delete_all_algorithms.setDisabled(True)
+        if len(self.ttt_algorithms_array)==0:
+            self.ttt_delete_all_algorithms.setDisabled(True)
 
         self.verticalLayout_GamePage.addLayout(self.tictactoe_edit_menu)
         self.verticalLayout_Body.addWidget(self.tictactoe_game_page)
