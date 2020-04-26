@@ -92,8 +92,6 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.tictactoe_start_page.hide()
         self.renderTicTacToeGamePage(self)
-        self.tictactoeGameRestart()
-        self.tictactoeChangeGameSpeed(self.ttt_set_speed_normal)
 
         self.ttt_start.setDisabled(True)
 
@@ -102,6 +100,9 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_restart.clicked.connect(self.tictactoeGameRestart)
         self.ttt_add_algorithm.clicked.connect(self.tictactoeOpenFile)
         self.ttt_delete_all_algorithms.clicked.connect(self.tictactoeDeleteAllAlgorithms)
+
+        self.tictactoeGameRestart()
+        self.tictactoeChangeGameSpeed(self.ttt_set_speed_normal)
 
         self.ttt_set_speed_normal.triggered.connect(lambda: self.tictactoeChangeGameSpeed(self.ttt_set_speed_normal))
         self.ttt_set_speed_slow.triggered.connect(lambda: self.tictactoeChangeGameSpeed(self.ttt_set_speed_slow))
@@ -128,11 +129,27 @@ class App(QMainWindow, AppUi, AppScripts):
         winner_num = alg_num1 if self.ttt_current_player==first_player else alg_num2
         if self.ttt_end_game_result != 'draw':
             self.ttt_rating_table[winner_num][1] += 3
-            self.ttt_current_winner_label.setText(self._translate("App", f"Победитель - {winner_name}"f"({self.ttt_current_player.upper()})"))
+
+            self.ttt_current_winner_label.setText(self._translate("App",
+                f"Победитель - {winner_name}({self.ttt_current_player.upper()})")
+            )
+
+            self.ttt_details_array.append(
+                f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
+                f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})\n'
+                f'  Победитель - {winner_name}({self.ttt_current_player.upper()})'
+            )
+
         else:
             self.ttt_rating_table[alg_num1][1] += 1
             self.ttt_rating_table[alg_num2][1] += 1
             self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
+
+            self.ttt_details_array.append(
+                f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
+                f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})\n'
+                f'  Ничья'
+            )
 
     def tictactoeCompare(self):
         if len(self.ttt_algorithms_array) < 2:
@@ -165,8 +182,10 @@ class App(QMainWindow, AppUi, AppScripts):
                     continue
 
                 for i in range(2):
-                    self.ttt_current_winner_label.setText(f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
-                                                          f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})')
+                    self.ttt_current_winner_label.setText(self._translate("App",
+                        f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
+                        f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})'
+                    ))
 
                     self.tictactoeComparator(first_player, second_player, alg_num1, alg_num2)
                     QTest.qWait(self.ttt_game_speed*4)#ms
@@ -178,6 +197,11 @@ class App(QMainWindow, AppUi, AppScripts):
                     self.tictactoeClearField()
 
         self.tictactoeGetWinners()
+
+        self.ttt_compare.setDisabled(False)
+        self.ttt_compare.setText(self._translate("App", "Показать подробности"))
+        self.ttt_compare.clicked.disconnect()
+        self.ttt_compare.clicked.connect(self.tictactoeShowDetails)
 
         self.ttt_add_algorithm.setText(self._translate("App", "Добавить Алгоритм"))
         self.ttt_add_algorithm.setDisabled(True)
@@ -221,11 +245,25 @@ class App(QMainWindow, AppUi, AppScripts):
             if self.ttt_end_game_result != 'draw':
                 self.ttt_rating_table[winner_num][1] += 3
                 self.ttt_current_winner_label.setText(
-                    self._translate("App", f"Победитель - {winner_name}"f"({self.ttt_current_player.upper()})"))
+                    self._translate("App", f"Победитель - {winner_name}({self.ttt_current_player.upper()})")
+                )
+
+                self.ttt_details_array.append(
+                    f'{self.ttt_rating_table[self.ttt_alg_num1][0]}({self.ttt_first_player.upper()}) '
+                    f'vs {self.ttt_rating_table[self.ttt_alg_num2][0]}({self.ttt_second_player.upper()})\n'
+                    f'  Победитель - {winner_name}({self.ttt_current_player.upper()})'
+                )
+
             else:
                 self.ttt_rating_table[alg_num1][1] += 1
                 self.ttt_rating_table[alg_num2][1] += 1
                 self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
+
+                self.ttt_details_array.append(
+                    f'{self.ttt_rating_table[self.ttt_alg_num1][0]}({self.ttt_first_player.upper()}) '
+                    f'vs {self.ttt_rating_table[self.ttt_alg_num2][0]}({self.ttt_second_player.upper()})\n'
+                    f'  Ничья'
+                )
 
             if self.ttt_global_iterator != len(self.ttt_algorithms_array) * (len(self.ttt_algorithms_array) - 1):
                 self.ttt_compare.setText(self._translate("App", "Следующая битва"))
@@ -266,14 +304,15 @@ class App(QMainWindow, AppUi, AppScripts):
                         self.ttt_skip_game.hide()
                         self.ttt_add_algorithm.show()
 
-                        self.ttt_compare.setDisabled(True)
                         self.ttt_game_back.setDisabled(False)
                         self.ttt_restart.setDisabled(False)
                         self.ttt_delete_all_algorithms.setDisabled(False)
                         self.ttt_step_by_step_mode.setDisabled(False)
 
+                        self.ttt_compare.setDisabled(False)
+                        self.ttt_compare.setText(self._translate("App", "Показать подробности"))
                         self.ttt_compare.clicked.disconnect()
-                        self.ttt_compare.clicked.connect(self.tictactoeCompare)
+                        self.ttt_compare.clicked.connect(self.tictactoeShowDetails)
 
                         self.tictactoeGetWinners()
                         return False
@@ -369,6 +408,7 @@ class App(QMainWindow, AppUi, AppScripts):
             self.ttt_game_speed = self.ttt_game_speed_backup
 
         self.ttt_rating_table = self.ttt_source_rating_table.copy()
+        self.ttt_details_array = []
 
         self.tictactoeSetAlgorithmsList()
 
@@ -377,6 +417,9 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.tictactoeClearField()
 
+        self.ttt_compare.clicked.disconnect()
+        self.ttt_compare.clicked.connect(self.tictactoeCompare)
+        self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
         self.ttt_compare.setDisabled(False)
         self.ttt_add_algorithm.setDisabled(False)
         self.ttt_game_back.setDisabled(False)
@@ -438,11 +481,8 @@ class App(QMainWindow, AppUi, AppScripts):
         if self.showConfirm('Вы уверены что хотите удалить все алгоритмы?'):
             self.ttt_algorithms_array.clear()
             self.ttt_source_rating_table.clear()
-            self.ttt_rating_table.clear()
             self.tictactoeSetAlgorithmsList()
-            self.ttt_delete_all_algorithms.setDisabled(True)
-            self.ttt_add_algorithm.setDisabled(False)
-            self.ttt_compare.setDisabled(False)
+            self.tictactoeGameRestart()
 
     # -------Tic-Tac-Toe-Functions-End----------#
 

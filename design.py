@@ -249,6 +249,8 @@ class AppUi(AppScripts):
         self.ttt_algorithm_list.setReadOnly(True)
         self.ttt_algorithm_list.setObjectName("ttt_algorithm_list")
         self.ttt_algorithm_list.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.ttt_algorithm_list.verticalScrollBar().setPageStep(1)
+        self.ttt_algorithm_list.verticalScrollBar().setSingleStep(1)
         self.tictactoe_edit_menu.addWidget(self.ttt_algorithm_list, 1, 0, 1, 1)
 
         self.ttt_delete_all_algorithms = QtWidgets.QPushButton(self.tictactoe_game_page)
@@ -440,11 +442,29 @@ class AppUi(AppScripts):
 
         self.ttt_algorithm_list.verticalScrollBar().setValue(0)
 
+        self.ttt_compare.clicked.disconnect()
+        self.ttt_compare.clicked.connect(self.tictactoeShowDetails)
+        self.ttt_compare.setText(self._translate("App", "Показать подробности"))
+
     def tictactoeSetDefaultValues(self):
         self.ttt_game_matrix = [['-1'] * self.ttt_width for i in range(self.ttt_height)]
         self.ttt_current_player = 'x'
         self.ttt_move_number = 0
         self.ttt_end_game_result = ''
+
+    def tictactoeShowDetails(self):
+        print(' - tictactoeShowDetails run')
+        self.ttt_algorithm_list.setPlainText('')
+        details = self.ttt_details_array
+        for i, j in zip(range(0, len(details), +2), range(len(details))):
+            self.ttt_algorithm_list.appendPlainText(f'{j+1} битва:')
+            self.ttt_algorithm_list.appendPlainText(f' {i+1}. {details[i]}')
+            self.ttt_algorithm_list.appendPlainText(f' {i+2}. {details[i+1]}\n')
+
+        self.ttt_compare.clicked.disconnect()
+        self.ttt_compare.clicked.connect(self.tictactoeGetWinners)
+        self.ttt_compare.setText(self._translate("App", "Показать результаты"))
+        self.ttt_algorithm_list.verticalScrollBar().setValue(0)
 
     #-----------------------------TicTacToe-Game-Page-End--------------------------------------#
 
