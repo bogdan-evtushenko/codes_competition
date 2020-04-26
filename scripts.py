@@ -29,6 +29,7 @@ class AppScripts(object):
         self.ttt_alg_num2 = 1
         self.ttt_is_skip_battle = False
         self.ttt_is_skip_game = False
+        self.ttt_is_fast_show_results = False
         self.ttt_details_array = []
 
     def nextMove(self):

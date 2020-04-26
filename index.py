@@ -130,9 +130,10 @@ class App(QMainWindow, AppUi, AppScripts):
         if self.ttt_end_game_result != 'draw':
             self.ttt_rating_table[winner_num][1] += 3
 
-            self.ttt_current_winner_label.setText(self._translate("App",
-                f"Победитель - {winner_name}({self.ttt_current_player.upper()})")
-            )
+            if not self.ttt_is_fast_show_results:
+                self.ttt_current_winner_label.setText(self._translate("App",
+                    f"Победитель - {winner_name}({self.ttt_current_player.upper()})")
+                )
 
             self.ttt_details_array.append(
                 f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
@@ -143,7 +144,9 @@ class App(QMainWindow, AppUi, AppScripts):
         else:
             self.ttt_rating_table[alg_num1][1] += 1
             self.ttt_rating_table[alg_num2][1] += 1
-            self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
+
+            if not self.ttt_is_fast_show_results:
+                self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
 
             self.ttt_details_array.append(
                 f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
@@ -182,10 +185,11 @@ class App(QMainWindow, AppUi, AppScripts):
                     continue
 
                 for i in range(2):
-                    self.ttt_current_winner_label.setText(self._translate("App",
-                        f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
-                        f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})'
-                    ))
+                    if not self.ttt_is_fast_show_results:
+                        self.ttt_current_winner_label.setText(self._translate("App",
+                            f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
+                            f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})'
+                        ))
 
                     self.tictactoeComparator(first_player, second_player, alg_num1, alg_num2)
                     QTest.qWait(self.ttt_game_speed*4)#ms
@@ -213,6 +217,7 @@ class App(QMainWindow, AppUi, AppScripts):
 
     def tictactoeSkipGame(self):
         self.ttt_game_speed = 0
+        self.ttt_is_fast_show_results = True
         self.ttt_add_algorithm.setText(self._translate("App", "Добавить Алгоритм"))
         self.ttt_add_algorithm.setDisabled(True)
         self.ttt_add_algorithm.clicked.disconnect()
@@ -244,9 +249,11 @@ class App(QMainWindow, AppUi, AppScripts):
             winner_num = alg_num1 if self.ttt_current_player == first_player else alg_num2
             if self.ttt_end_game_result != 'draw':
                 self.ttt_rating_table[winner_num][1] += 3
-                self.ttt_current_winner_label.setText(
-                    self._translate("App", f"Победитель - {winner_name}({self.ttt_current_player.upper()})")
-                )
+
+                if not self.ttt_is_fast_show_results:
+                    self.ttt_current_winner_label.setText(
+                        self._translate("App", f"Победитель - {winner_name}({self.ttt_current_player.upper()})")
+                    )
 
                 self.ttt_details_array.append(
                     f'{self.ttt_rating_table[self.ttt_alg_num1][0]}({self.ttt_first_player.upper()}) '
@@ -257,7 +264,9 @@ class App(QMainWindow, AppUi, AppScripts):
             else:
                 self.ttt_rating_table[alg_num1][1] += 1
                 self.ttt_rating_table[alg_num2][1] += 1
-                self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
+
+                if not self.ttt_is_fast_show_results:
+                    self.ttt_current_winner_label.setText(self._translate("App", "Ничья"))
 
                 self.ttt_details_array.append(
                     f'{self.ttt_rating_table[self.ttt_alg_num1][0]}({self.ttt_first_player.upper()}) '
@@ -319,9 +328,10 @@ class App(QMainWindow, AppUi, AppScripts):
 
         #print(f'{self.ttt_alg_num1+1}vs{self.ttt_alg_num2+1}')
 
-        self.ttt_current_winner_label.setText(
-            f'{self.ttt_rating_table[self.ttt_alg_num1][0]}({self.ttt_first_player.upper()}) '
-            f'vs {self.ttt_rating_table[self.ttt_alg_num2][0]}({self.ttt_second_player.upper()})')
+        if not self.ttt_is_fast_show_results:
+            self.ttt_current_winner_label.setText(
+                f'{self.ttt_rating_table[self.ttt_alg_num1][0]}({self.ttt_first_player.upper()}) '
+                f'vs {self.ttt_rating_table[self.ttt_alg_num2][0]}({self.ttt_second_player.upper()})')
 
         self.tictactoeStepByStepComparator(self.ttt_first_player, self.ttt_second_player, self.ttt_alg_num1, self.ttt_alg_num2)
         if self.ttt_end_game_result != '':
@@ -376,7 +386,6 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_is_skip_battle = False
 
     def tictactoeStepByStepSkipGame(self):
-
         self.ttt_is_skip_game = True
         self.ttt_compare.setDisabled(True)
         self.ttt_skip_battle.setDisabled(True)
@@ -395,6 +404,7 @@ class App(QMainWindow, AppUi, AppScripts):
 
     def tictactoeSetZeroSpeed(self):
         self.ttt_game_speed = 0
+        self.ttt_is_fast_show_results = True
 
     def tictactoeGameBack(self):
         self.ttt_start.setDisabled(False)
@@ -409,6 +419,7 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.ttt_rating_table = self.ttt_source_rating_table.copy()
         self.ttt_details_array = []
+        self.ttt_is_fast_show_results = False
 
         self.tictactoeSetAlgorithmsList()
 

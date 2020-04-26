@@ -325,11 +325,12 @@ class AppUi(AppScripts):
 
     def tictactoeRefreshGameField(self, App):
         #print(' - refreshGameField run')
-        for i in range(self.ttt_height):
-            for j in range(self.ttt_width):
-                if self.ttt_game_matrix[i][j] != '-1':
-                    child = self.tictactoe_game_page.findChild(QtWidgets.QPushButton, f'tictactoe_game_cell_{i}_{j}')
-                    child.setText(self._translate("App", f'{self.ttt_game_matrix[i][j]}'.upper()))
+        if not self.ttt_is_fast_show_results:
+            for i in range(self.ttt_height):
+                for j in range(self.ttt_width):
+                    if self.ttt_game_matrix[i][j] != '-1':
+                        child = self.tictactoe_game_page.findChild(QtWidgets.QPushButton, f'tictactoe_game_cell_{i}_{j}')
+                        child.setText(self._translate("App", f'{self.ttt_game_matrix[i][j]}'.upper()))
 
         if self.tictactoeCheckWin():
             #print(self.ttt_end_game_result)
@@ -363,6 +364,9 @@ class AppUi(AppScripts):
         self.ttt_current_move_label.setText(f"Текущий ход: {self.ttt_current_player.upper()}")
 
     def tictactoePathPaintCells(self, path):
+        if self.ttt_is_fast_show_results:
+            return False
+
         for item in path:
             if '_' in item:
                 child = self.tictactoe_game_page.findChild(QtWidgets.QPushButton, f"tictactoe_game_cell_{item}")
@@ -453,7 +457,7 @@ class AppUi(AppScripts):
         self.ttt_end_game_result = ''
 
     def tictactoeShowDetails(self):
-        print(' - tictactoeShowDetails run')
+        #print(' - tictactoeShowDetails run')
         self.ttt_algorithm_list.setPlainText('')
         details = self.ttt_details_array
         for i, j in zip(range(0, len(details), +2), range(len(details))):
