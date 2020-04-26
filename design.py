@@ -459,10 +459,9 @@ class AppUi(AppScripts):
     def tictactoeShowDetails(self):
         #print(' - tictactoeShowDetails run')
         self.ttt_algorithm_list.setPlainText('')
-        details = self.ttt_details_array
-        for i in range(0, len(details), +2):
-            self.ttt_algorithm_list.appendPlainText(f' {i+1}. {details[i]}')
-            self.ttt_algorithm_list.appendPlainText(f' {i+2}. {details[i+1]}\n')
+
+        for i, item in enumerate(self.ttt_details_array):
+            self.ttt_algorithm_list.appendPlainText(f' {i+1}. {item}\n')
 
         self.ttt_compare.clicked.disconnect()
         self.ttt_compare.clicked.connect(self.tictactoeGetWinners)

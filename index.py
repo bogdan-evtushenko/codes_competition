@@ -494,6 +494,7 @@ class App(QMainWindow, AppUi, AppScripts):
             self.ttt_source_rating_table.clear()
             self.tictactoeSetAlgorithmsList()
             self.tictactoeGameRestart()
+            self.ttt_delete_all_algorithms.setDisabled(True)
 
     # -------Tic-Tac-Toe-Functions-End----------#
 
