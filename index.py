@@ -154,7 +154,7 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_delete_all_algorithms.setDisabled(True)
         self.ttt_step_by_step_mode.setDisabled(True)
 
-        self.ttt_add_algorithm.setText(self._translate("App", "Закончить турнир"))
+        self.ttt_add_algorithm.setText(self._translate("App", "Завершить турнир"))
         self.ttt_add_algorithm.clicked.disconnect()
         self.ttt_add_algorithm.clicked.connect(self.tictactoeSkipGame)
 
@@ -337,16 +337,25 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_is_skip_battle = False
 
     def tictactoeStepByStepSkipGame(self):
+
         self.ttt_is_skip_game = True
         self.ttt_compare.setDisabled(True)
         self.ttt_skip_battle.setDisabled(True)
-        self.ttt_skip_game.setDisabled(True)
+        self.ttt_skip_game.setText(self._translate("App", "Показать результаты"))
+        self.ttt_skip_game.clicked.disconnect()
+        self.ttt_skip_game.clicked.connect(self.tictactoeSetZeroSpeed)
 
         while self.ttt_alg_num2 != len(self.ttt_algorithms_array):
             self.tictactoeStepByStepCompare()
             QTest.qWait(self.ttt_game_speed)
 
+        self.ttt_skip_game.setText(self._translate("App", "Завершить турнир"))
+        self.ttt_skip_game.clicked.disconnect()
+        self.ttt_skip_game.clicked.connect(self.tictactoeStepByStepSkipGame)
         self.ttt_is_skip_game = False
+
+    def tictactoeSetZeroSpeed(self):
+        self.ttt_game_speed = 0
 
     def tictactoeGameBack(self):
         self.ttt_start.setDisabled(False)
