@@ -1,6 +1,6 @@
 from random import *
 
-def algorithm(matrix, height, width, player):
+def algorithm(matrix, height, width, player, winCount):
     emptyCells = []
     
     for i in range(height):

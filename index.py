@@ -117,10 +117,10 @@ class App(QMainWindow, AppUi, AppScripts):
         while self.ttt_end_game_result == '':
             if self.ttt_current_player == first_player:
                 self.ttt_game_matrix = first_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
-                                                                        self.ttt_width, first_player)
+                                                                        self.ttt_width, first_player, self.ttt_win_cnt)
             else:
                 self.ttt_game_matrix = second_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
-                                                                         self.ttt_width, second_player)
+                                                                         self.ttt_width, second_player, self.ttt_win_cnt)
 
             self.tictactoeRefreshGameField(App)
             QTest.qWait(self.ttt_game_speed)#ms
@@ -238,10 +238,10 @@ class App(QMainWindow, AppUi, AppScripts):
             second_algorithm_module = importlib.import_module(f'algorithms.{self.ttt_algorithms_array[alg_num2]}')
             if self.ttt_current_player == first_player:
                 self.ttt_game_matrix = first_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
-                                                                        self.ttt_width, first_player)
+                                                                        self.ttt_width, first_player, self.ttt_win_cnt)
             else:
                 self.ttt_game_matrix = second_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
-                                                                         self.ttt_width, second_player)
+                                                                         self.ttt_width, second_player, self.ttt_win_cnt)
             self.tictactoeRefreshGameField(App)
 
         else:
@@ -461,7 +461,7 @@ class App(QMainWindow, AppUi, AppScripts):
                 algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
                 if algorithm_file != '':
                     with open(algorithm_file, 'r') as file:
-                        if not 'def algorithm(matrix, height, width, player):' in file.read():
+                        if not 'def algorithm(matrix, height, width, player, winCount):' in file.read():
                             self.showError('Несоответствие формата файла-алгоритма!')
                         else:
                             error = False
