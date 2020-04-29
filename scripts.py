@@ -5,6 +5,8 @@ class AppScripts(object):
         self.ttt_width = 1
         self.ttt_height = 1
         self.ttt_win_cnt = 1
+        self.ttt_rounds_number = 1
+        self.ttt_rounds__number_iter = 0
         self.ttt_move_number = 0
         self.ttt_current_player = 'x'
         self.ttt_game_matrix = [['-1']]
