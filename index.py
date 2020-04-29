@@ -16,16 +16,46 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.renderBody(self)
         self.renderStartPage(self)
+
         self.renderTicTacToeStartPage(self)
         self.tictactoe_start_page.hide()
+
+        self.renderBattleshipGamePage(self)
+        self.battleship_game_page.hide()
 
         self.build_handlers()
 
     def build_handlers(self):
         self.exit.clicked.connect(lambda : QApplication.exit())
         self.games_list_tictactoe.clicked.connect(self.tictactoeOpen)
+        self.games_list_battleship.clicked.connect(self.battleshipOpen)
         self.ttt_back.clicked.connect(self.tictactoeBack)
         self.ttt_start.clicked.connect(self.tictactoeStart)
+
+        self.battleship_back.clicked.connect(self.battleshipBack)
+        self.battleship_add_algorithm.clicked.connect(self.battleshipOpenFile)
+        self.battleship_check.clicked.connect(self.battleshipCheckField)
+        self.battleship_next.clicked.connect(self.battleshipNext)
+
+    #-------Battleship-Functions-----------#
+    def battleshipOpen(self):
+        self.start_page.hide()
+        self.battleship_game_page.show()
+
+    def battleshipBack(self):
+        self.start_page.show()
+        self.battleship_game_page.hide()
+
+    def battleshipOpenFile(self):
+        pass
+
+    def battleshipCheckField(self):
+        pass
+
+    def battleshipNext(self):
+        pass
+
+    # -------Battleship-Functions-End----------#
 
     #-------Tic-Tac-Toe-Functions-----------#
     def tictactoeOpen(self):

@@ -37,27 +37,132 @@ class AppUi(AppScripts):
         self.games_list_tictactoe.setObjectName("games_list_tictactoe")
         self.games_list.setWidget(1, QtWidgets.QFormLayout.SpanningRole, self.games_list_tictactoe)
 
+        self.games_list_battleship = QtWidgets.QPushButton(self.start_page)
+        self.games_list_battleship.setAutoDefault(True)
+        self.games_list_battleship.setObjectName("games_list_battleship")
+        self.games_list.setWidget(2, QtWidgets.QFormLayout.SpanningRole, self.games_list_battleship)
+
         self.games_list_other = QtWidgets.QPushButton(self.start_page)
         self.games_list_other.setEnabled(False)
         self.games_list_other.setObjectName("games_list_other")
-        self.games_list.setWidget(2, QtWidgets.QFormLayout.SpanningRole, self.games_list_other)
+        self.games_list.setWidget(3, QtWidgets.QFormLayout.SpanningRole, self.games_list_other)
 
         self.exit = QtWidgets.QPushButton(self.start_page)
         self.exit.setAutoDefault(True)
         self.exit.setObjectName("exit")
-        self.games_list.setWidget(3, QtWidgets.QFormLayout.SpanningRole, self.exit)
+        self.games_list.setWidget(4, QtWidgets.QFormLayout.SpanningRole, self.exit)
 
         self.verticalLayout_StartPage.addLayout(self.games_list)
         self.verticalLayout_Body.addWidget(self.start_page)
 
         self.project_name.setText(self._translate("App", "Project 121"))
         self.games_list_tictactoe.setText(self._translate("App", "Крестики-Нолики"))
+        self.games_list_battleship.setText(self._translate("App", "Морской бой"))
         self.games_list_other.setText(self._translate("App", "в разработке..."))
         self.games_list_header.setText(self._translate("App", "Игры"))
         self.exit.setText(self._translate("App", "Выйти"))
 
     #-----------------------------Start-Page-End-----------------------------------------------#
 
+    #-----------------------------Battleship-Game-Page-----------------------------------------#
+
+    def renderBattleshipGamePage(self, App):
+        #print(' - renderBattleshipGamePage run')
+
+        self.battleship_game_page = QtWidgets.QWidget(self.body)
+        self.battleship_game_page.setObjectName("battleship_game_page")
+        self.battleship_game_page.setContentsMargins(0, 20, 0, 40)
+
+        self.verticalLayout_BattleshipGamePage = QtWidgets.QVBoxLayout(self.battleship_game_page)
+        self.verticalLayout_BattleshipGamePage.setObjectName("verticalLayout_BattleshipGamePage")
+
+        self.battleship_game_page_header = QtWidgets.QVBoxLayout()
+        self.battleship_game_page_header.setObjectName("battleship_game_page_header")
+        self.battleship_game_page_header.setSpacing(0)
+
+        self.battleship_current_player = QtWidgets.QLabel(self.battleship_game_page)
+        self.battleship_current_player.setMaximumHeight(26)
+        self.battleship_current_player.setAlignment(QtCore.Qt.AlignCenter)
+        self.battleship_current_player.setObjectName("battleship_current_player")
+        self.battleship_game_page_header.addWidget(self.battleship_current_player)
+
+        self.battleship_current_vs = QtWidgets.QLabel(self.battleship_game_page)
+        self.battleship_current_vs.setMaximumHeight(20)
+        self.battleship_current_vs.setAlignment(QtCore.Qt.AlignCenter)
+        self.battleship_current_vs.setObjectName("battleship_current_vs")
+        self.battleship_game_page_header.addWidget(self.battleship_current_vs)
+
+        self.verticalLayout_BattleshipGamePage.addLayout(self.battleship_game_page_header)
+
+        self.battleship_game_field = QtWidgets.QWidget(self.battleship_game_page)
+        self.battleship_game_field.setObjectName("battleship_game_field")
+        self.battleship_game_field.setStyleSheet("border: 2px solid #5C5C5C;")
+
+        self.gridLayout_BattleshipGameField = QtWidgets.QGridLayout(self.battleship_game_field)
+        self.gridLayout_BattleshipGameField.setObjectName("gridLayout_BattleshipGameField")
+        self.gridLayout_BattleshipGameField.setSpacing(0)
+        self.gridLayout_BattleshipGameField.setContentsMargins(0, 0, 0, 0)
+
+        for i in range(10):
+            for j in range(10):
+                self.battleship_game_cell = QtWidgets.QPushButton(self.battleship_game_field)
+                self.battleship_game_cell.setObjectName(f"battleship_game_cell_{i}_{j}")
+
+                size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+                size_policy.setHorizontalStretch(0)
+                size_policy.setVerticalStretch(0)
+                size_policy.setHeightForWidth(self.battleship_game_cell.sizePolicy().hasHeightForWidth())
+                self.battleship_game_cell.setSizePolicy(size_policy)
+                self.battleship_game_cell.setFocusPolicy(QtCore.Qt.NoFocus)
+
+                battleship_game_cell_css = "background-color: transparent; border: 1px solid #5C5C5C;"
+                self.battleship_game_cell.setStyleSheet(battleship_game_cell_css)
+
+                self.battleship_game_cell.setMinimumSize(50, 50)
+
+                self.gridLayout_BattleshipGameField.addWidget(self.battleship_game_cell, i, j, 1, 1)
+
+        self.verticalLayout_BattleshipGamePage.addWidget(self.battleship_game_field, 0,
+                                                         QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+
+        self.battleship_edit_menu = QtWidgets.QHBoxLayout()
+        self.battleship_edit_menu.setObjectName("battleship_edit_menu")
+        self.battleship_edit_menu.setContentsMargins(40, 0, 40, 0)
+
+        self.battleship_back = QtWidgets.QPushButton(self.battleship_game_page)
+        self.battleship_back.setObjectName("battleship_back")
+        self.battleship_back.setAutoDefault(True)
+        self.battleship_edit_menu.addWidget(self.battleship_back)
+
+        self.battleship_add_algorithm = QtWidgets.QPushButton(self.battleship_game_page)
+        self.battleship_add_algorithm.setObjectName("battleship_add_algorithm")
+        self.battleship_add_algorithm.setAutoDefault(True)
+        self.battleship_edit_menu.addWidget(self.battleship_add_algorithm)
+
+        self.battleship_check = QtWidgets.QPushButton(self.battleship_game_page)
+        self.battleship_check.setObjectName("battleship_check")
+        self.battleship_check.setAutoDefault(True)
+        self.battleship_edit_menu.addWidget(self.battleship_check)
+
+        self.battleship_next = QtWidgets.QPushButton(self.battleship_game_page)
+        self.battleship_next.setObjectName("battleship_next")
+        self.battleship_next.setAutoDefault(True)
+        self.battleship_edit_menu.addWidget(self.battleship_next)
+
+        self.verticalLayout_BattleshipGamePage.addLayout(self.battleship_edit_menu)
+
+        self.verticalLayout_Body.addWidget(self.battleship_game_page)
+
+        self.battleship_current_player.setText(self._translate("App", "Поле игрока"))
+        self.battleship_current_vs.setText(self._translate("App", ""))
+        self.battleship_back.setText(self._translate("App", "Назад"))
+        self.battleship_add_algorithm.setText(self._translate("App", "Добавить алгоритм"))
+        self.battleship_check.setText(self._translate("App", "Проверить"))
+        self.battleship_next.setText(self._translate("App", "Далее"))
+
+
+
+    #-----------------------------Battleship-Game-Page-End-------------------------------------#
 
     #-----------------------------TicTacToe-Start-Page-----------------------------------------#
 
@@ -156,7 +261,9 @@ class AppUi(AppScripts):
                 self.tictactoe_game_cell = QtWidgets.QPushButton(self.tictactoe_game_page)
                 self.tictactoe_game_cell.setObjectName(f"tictactoe_game_cell_{i}_{j}")
                 #self.tictactoe_game_cell.setText(f'{i}_{j}')
-                self.tictactoe_game_cell_css = f"font-size: {460//(self.ttt_width+self.ttt_height)}px; color: #2A2A2A; background-color: transparent; border: 1px solid #2A2A2A;"
+                self.tictactoe_game_cell_css = f"font-size: {460//(self.ttt_width+self.ttt_height)}px;" \
+                                               f" color: #2A2A2A; background-color: transparent;" \
+                                               f" border: 1px solid #2A2A2A;"
                 self.tictactoe_game_cell.setStyleSheet(self.tictactoe_game_cell_css)
                 size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
                 size_policy.setHorizontalStretch(0)

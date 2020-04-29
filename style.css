@@ -9,15 +9,10 @@
     margin-bottom: 20px;
 }
 
-#games_list_tictactoe, #games_list_other, #exit {
+#games_list_tictactoe, #games_list_battleship, #games_list_other, #exit {
     font-size: 20px;
     padding: 10px;
-    /*color: #414141;*/
 }
-
-/* #games_list_tictactoe:hover {
-    color: #000;
-} */
 
 /* Start Page End */
 
@@ -32,14 +27,6 @@
     font-size: 16px;
     padding: 10px;
 }
-
-/* #ttt_start, #ttt_back {
-    color: #414141;
-}
-
-#ttt_start:hover, #ttt_back:hover {
-    color: #000;
-} */
 
 #ttt_back {
     font-size: 16px;
@@ -88,3 +75,20 @@
 }
 
 /* Tic Tac Toe Game Page End */
+
+/* Battleship Game Page */
+
+#battleship_current_player {
+    font-size: 22px;
+}
+
+#battleship_current_vs {
+    font-size: 16px;
+}
+
+#battleship_back, #battleship_add_algorithm, #battleship_check, #battleship_next {
+    font-size: 16px;
+    padding: 20px 0;
+}
+
+/* Battleship Game Page End */
