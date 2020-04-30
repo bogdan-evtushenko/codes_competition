@@ -51,6 +51,7 @@ class App(QMainWindow, AppUi, AppScripts):
         width = self.ttt_width_line.text()
         height = self.ttt_height_line.text()
         win_cnt = self.ttt_win_cnt_line.text()
+        rounds_number = self.ttt_rounds_number_line.text()
 
         if width == '':
             self.ttt_width_line.setText('3')
@@ -63,6 +64,10 @@ class App(QMainWindow, AppUi, AppScripts):
         if win_cnt == '':
             self.ttt_win_cnt_line.setText('3')
             win_cnt = self.ttt_win_cnt_line.text()
+
+        if rounds_number == '':
+            self.ttt_rounds_number_line.setText('1')
+            rounds_number = self.ttt_rounds_number_line.text()
 
         if digits_check(width):
             return showIncorrectData('Ширина должна быть целым положительным числом!')
@@ -85,6 +90,12 @@ class App(QMainWindow, AppUi, AppScripts):
             return showIncorrectData('Количество подряд идущих для победы не может равняться нулю!')
         if one_check(win_cnt):
             return showIncorrectData('Количество подряд идущих для победы не может равняться единице!')
+
+        if digits_check(rounds_number):
+            return showIncorrectData('Количество раундов для одной пары алгоритмов должно быть '
+                                     'целым положительным числом!')
+        if zero_check(rounds_number):
+            return showIncorrectData('Количество раундов для одной пары алгоритмов не может равняться нулю!')
 
         if int(win_cnt) > min(int(width), int(height)):
             return showIncorrectData('Количество подряд идущих для победы не может быть '
@@ -117,10 +128,10 @@ class App(QMainWindow, AppUi, AppScripts):
         while self.ttt_end_game_result == '':
             if self.ttt_current_player == first_player:
                 self.ttt_game_matrix = first_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
-                                                                        self.ttt_width, first_player)
+                                                                        self.ttt_width, first_player, self.ttt_win_cnt)
             else:
                 self.ttt_game_matrix = second_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
-                                                                         self.ttt_width, second_player)
+                                                                         self.ttt_width, second_player, self.ttt_win_cnt)
 
             self.tictactoeRefreshGameField(App)
             QTest.qWait(self.ttt_game_speed)#ms
@@ -185,19 +196,22 @@ class App(QMainWindow, AppUi, AppScripts):
                     continue
 
                 for i in range(2):
-                    if not self.ttt_is_fast_show_results:
-                        self.ttt_current_winner_label.setText(self._translate("App",
-                            f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
-                            f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})'
-                        ))
+                    for j in range(self.ttt_rounds_number):
+                        if not self.ttt_is_fast_show_results:
+                            self.ttt_current_winner_label.setText(self._translate("App",
+                                f'{self.ttt_rating_table[alg_num1][0]}({first_player.upper()}) '
+                                f'vs {self.ttt_rating_table[alg_num2][0]}({second_player.upper()})'
+                            ))
 
-                    self.tictactoeComparator(first_player, second_player, alg_num1, alg_num2)
-                    QTest.qWait(self.ttt_game_speed*4)#ms
+                        self.tictactoeComparator(first_player, second_player, alg_num1, alg_num2)
+                        QTest.qWait(self.ttt_game_speed*4)#ms
+
+                        self.tictactoeSetDefaultValues()
+                        self.tictactoeClearField()
 
                     first_player, second_player = second_player, first_player
 
                     self.tictactoeSetDefaultValues()
-
                     self.tictactoeClearField()
 
         self.tictactoeGetWinners()
@@ -238,10 +252,10 @@ class App(QMainWindow, AppUi, AppScripts):
             second_algorithm_module = importlib.import_module(f'algorithms.{self.ttt_algorithms_array[alg_num2]}')
             if self.ttt_current_player == first_player:
                 self.ttt_game_matrix = first_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
-                                                                        self.ttt_width, first_player)
+                                                                        self.ttt_width, first_player, self.ttt_win_cnt)
             else:
                 self.ttt_game_matrix = second_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
-                                                                         self.ttt_width, second_player)
+                                                                         self.ttt_width, second_player, self.ttt_win_cnt)
             self.tictactoeRefreshGameField(App)
 
         else:
@@ -274,7 +288,7 @@ class App(QMainWindow, AppUi, AppScripts):
                     f'  Ничья'
                 )
 
-            if self.ttt_global_iterator != len(self.ttt_algorithms_array) * (len(self.ttt_algorithms_array) - 1):
+            if self.ttt_global_iterator != (len(self.ttt_algorithms_array) * (len(self.ttt_algorithms_array) - 1)) * self.ttt_rounds_number:
                 self.ttt_compare.setText(self._translate("App", "Следующая битва"))
             else:
                 self.ttt_compare.setText(self._translate("App", "Показать результаты"))
@@ -287,44 +301,52 @@ class App(QMainWindow, AppUi, AppScripts):
         #print(' - tictactoeStepByStepCompare run')
         if self.ttt_compare.text() == 'Следующая битва':
             self.tictactoeClearField()
+
             self.ttt_compare.clicked.disconnect()
             self.ttt_compare.clicked.connect(self.tictactoeStepByStepFirstStep)
             self.ttt_compare.setText(self._translate("App", "Первый шаг"))
+
             if not self.ttt_is_skip_game:
                 self.ttt_skip_battle.setDisabled(False)
+
+            self.ttt_rounds__number_iter += 1
+
             return False
 
         if self.ttt_end_game_result != '':
-            self.ttt_first_player, self.ttt_second_player = self.ttt_second_player, self.ttt_first_player
             self.tictactoeSetDefaultValues()
             self.tictactoeClearField()
-            self.ttt_iterator += 1
             self.ttt_global_iterator += 1
-            if self.ttt_iterator == 2:
-                self.ttt_alg_num2 += 1
-                self.ttt_iterator = 0
-                if self.ttt_alg_num2 == len(self.ttt_algorithms_array):
-                    self.ttt_alg_num1 += 1
-                    self.ttt_alg_num2 = self.ttt_alg_num1 + 1
+
+            if self.ttt_rounds__number_iter == self.ttt_rounds_number or self.ttt_compare.text() == 'Показать результаты':
+                self.ttt_rounds__number_iter = 0
+                self.ttt_first_player, self.ttt_second_player = self.ttt_second_player, self.ttt_first_player
+                self.ttt_iterator += 1
+                if self.ttt_iterator == 2:
+                    self.ttt_alg_num2 += 1
+                    self.ttt_iterator = 0
                     if self.ttt_alg_num2 == len(self.ttt_algorithms_array):
-                        self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
+                        self.ttt_alg_num1 += 1
+                        self.ttt_alg_num2 = self.ttt_alg_num1 + 1
+                        if self.ttt_alg_num2 == len(self.ttt_algorithms_array):
+                            self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
 
-                        self.ttt_skip_battle.hide()
-                        self.ttt_skip_game.hide()
-                        self.ttt_add_algorithm.show()
+                            self.ttt_skip_battle.hide()
+                            self.ttt_skip_game.hide()
+                            self.ttt_add_algorithm.show()
 
-                        self.ttt_game_back.setDisabled(False)
-                        self.ttt_restart.setDisabled(False)
-                        self.ttt_delete_all_algorithms.setDisabled(False)
-                        self.ttt_step_by_step_mode.setDisabled(False)
+                            self.ttt_game_back.setDisabled(False)
+                            self.ttt_restart.setDisabled(False)
+                            self.ttt_delete_all_algorithms.setDisabled(False)
+                            self.ttt_step_by_step_mode.setDisabled(False)
 
-                        self.ttt_compare.setDisabled(False)
-                        self.ttt_compare.setText(self._translate("App", "Показать подробности"))
-                        self.ttt_compare.clicked.disconnect()
-                        self.ttt_compare.clicked.connect(self.tictactoeShowDetails)
+                            self.ttt_compare.setDisabled(False)
+                            self.ttt_compare.setText(self._translate("App", "Показать подробности"))
+                            self.ttt_compare.clicked.disconnect()
+                            self.ttt_compare.clicked.connect(self.tictactoeShowDetails)
 
-                        self.tictactoeGetWinners()
-                        return False
+                            self.tictactoeGetWinners()
+                            return False
 
         #print(f'{self.ttt_alg_num1+1}vs{self.ttt_alg_num2+1}')
 
@@ -461,7 +483,7 @@ class App(QMainWindow, AppUi, AppScripts):
                 algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
                 if algorithm_file != '':
                     with open(algorithm_file, 'r') as file:
-                        if not 'def algorithm(matrix, height, width, player):' in file.read():
+                        if not 'def algorithm(matrix, height, width, player, winCount):' in file.read():
                             self.showError('Несоответствие формата файла-алгоритма!')
                         else:
                             error = False

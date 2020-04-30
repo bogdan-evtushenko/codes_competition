@@ -94,16 +94,16 @@ class AppUi(AppScripts):
         self.ttt_win_cnt_line.setObjectName("ttt_win_cnt_line")
         self.ttt_inputs.addWidget(self.ttt_win_cnt_line, 1, 0, 1, 2)
 
-        #self.ttt_game_speed_line = QtWidgets.QLineEdit(self.tictactoe_start_page)
-        #self.ttt_game_speed_line.setAlignment(QtCore.Qt.AlignCenter)
-        #self.ttt_game_speed_line.setObjectName("ttt_win_cnt_line")
-        #self.ttt_inputs.addWidget(self.ttt_game_speed_line, 1, 1, 1, 1)
+        self.ttt_rounds_number_line = QtWidgets.QLineEdit(self.tictactoe_start_page)
+        self.ttt_rounds_number_line.setAlignment(QtCore.Qt.AlignCenter)
+        self.ttt_rounds_number_line.setObjectName("ttt_win_cnt_line")
+        self.ttt_inputs.addWidget(self.ttt_rounds_number_line, 2, 0, 1, 2)
 
         self.ttt_start = QtWidgets.QPushButton(self.tictactoe_start_page)
         self.ttt_start.setAutoDefault(True)
         self.ttt_start.setObjectName("ttt_start")
         self.ttt_start.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.ttt_inputs.addWidget(self.ttt_start, 2, 0, 1, 2)
+        self.ttt_inputs.addWidget(self.ttt_start, 3, 0, 1, 2)
 
         self.verticalLayout_TicTacToeStartPage.addLayout(self.ttt_inputs)
 
@@ -121,7 +121,8 @@ class AppUi(AppScripts):
         self.ttt_width_line.setPlaceholderText(self._translate("App", "Ширина (по умолчанию 3)"))
         self.ttt_height_line.setPlaceholderText(self._translate("App", "Высота (по умолчанию 3)"))
         self.ttt_win_cnt_line.setPlaceholderText(self._translate("App", "Количество подряд идущих для победы (по умолчанию 3)"))
-        #self.ttt_game_speed_line.setPlaceholderText(self._translate("App", "Скорость игры (мс) (по умолчанию 100)"))
+        self.ttt_rounds_number_line.setPlaceholderText(self._translate("App", "Количество раундов для одной пары алгоритмов "
+                                                                              "(по умолчанию 1)"))
         self.ttt_start.setText(self._translate("App", "Старт"))
         self.ttt_back.setText(self._translate("App", "Назад"))
 
@@ -135,7 +136,7 @@ class AppUi(AppScripts):
         self.ttt_width = int(self.ttt_width_line.text())
         self.ttt_height = int(self.ttt_height_line.text())
         self.ttt_win_cnt = int(self.ttt_win_cnt_line.text())
-        #self.ttt_game_speed = int(self.ttt_game_speed_line.text())
+        self.ttt_rounds_number = int(self.ttt_rounds_number_line.text())
 
         self.ttt_game_matrix = [['-1'] * self.ttt_width for i in range(self.ttt_height)]
 
@@ -188,9 +189,6 @@ class AppUi(AppScripts):
         self.ttt_current_winner_label.setObjectName("ttt_current_winner_label")
         self.ttt_game_info.addWidget(self.ttt_current_winner_label)
         self.verticalLayout_GamePage.addLayout(self.ttt_game_info)
-
-        #spacer = QtWidgets.QSpacerItem(40, 40, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        #self.verticalLayout_GamePage.addItem(spacer)
 
         self.tictactoe_edit_menu = QtWidgets.QGridLayout()
         self.tictactoe_edit_menu.setObjectName("tictactoe_edit_menu")
