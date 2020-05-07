@@ -20,6 +20,9 @@ class App(QMainWindow, AppUi, AppScripts):
         self.renderTicTacToeStartPage(self)
         self.tictactoe_start_page.hide()
 
+        self.renderBattleshipStartPage(self)
+        self.battleship_start_page.hide()
+
         self.renderBattleshipGamePage(self)
         self.battleship_game_page.hide()
 
@@ -34,26 +37,342 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.battleship_back.clicked.connect(self.battleshipBack)
         self.battleship_add_algorithm.clicked.connect(self.battleshipOpenFile)
-        self.battleship_check.clicked.connect(self.battleshipCheckField)
+        #self.battleship_check.clicked.connect(self.battleshipCheckField)
         self.battleship_next.clicked.connect(self.battleshipNext)
+
+        self.battleship_game_back.clicked.connect(self.battleshipBack)
+        self.battleship_compare.clicked.connect(self.battleshipCompare)
+        self.battleship_to_main_menu.clicked.connect(self.battleshipToMainMenu)
+        self.battleship_change_algorithms.clicked.connect(self.battleshipChangeAlgorithms)
+        self.battleship_skip_sbs_round.clicked.connect(self.battleshipSkipSbsRound)
+        self.battleship_skip_sbs_game.clicked.connect(self.battleshipSkipSbsGame)
+
+        self.battleship_bar_speed_normal.triggered.connect(lambda: self.battleshipChangeGameSpeed(self.battleship_bar_speed_normal))
+        self.battleship_bar_speed_slow.triggered.connect(lambda: self.battleshipChangeGameSpeed(self.battleship_bar_speed_slow))
+        self.battleship_bar_speed_very_slow.triggered.connect(lambda: self.battleshipChangeGameSpeed(self.battleship_bar_speed_very_slow))
+        self.battleship_bar_speed_fast.triggered.connect(lambda: self.battleshipChangeGameSpeed(self.battleship_bar_speed_fast))
+        self.battleship_bar_speed_very_fast.triggered.connect(lambda: self.battleshipChangeGameSpeed(self.battleship_bar_speed_very_fast))
 
     #-------Battleship-Functions-----------#
     def battleshipOpen(self):
         self.start_page.hide()
-        self.battleship_game_page.show()
+        self.battleship_start_page.show()
+        self.battleship_current_page = 1
+        self.battleshipRoutes()
 
     def battleshipBack(self):
-        self.start_page.show()
-        self.battleship_game_page.hide()
-
-    def battleshipOpenFile(self):
-        pass
-
-    def battleshipCheckField(self):
-        pass
+        self.battleship_current_page -= 1
+        self.battleshipRoutes()
 
     def battleshipNext(self):
-        pass
+        self.battleship_current_page += 1
+        self.battleshipRoutes()
+
+    def battleshipToMainMenu(self):
+        self.battleship_game_page.hide()
+        self.start_page.show()
+
+    def battleshipChangeAlgorithms(self):
+        self.battleship_current_page = 1
+        self.battleshipRoutes()
+
+    def battleshipRoutes(self):
+        page = self.battleship_current_page
+        if page == 0:
+            self.start_page.show()
+            self.battleship_start_page.hide()
+        if page == 1:
+            self.battleship_game_page.hide()
+            self.battleship_start_page.show()
+            if self.battleship_nickname_p1 == '':
+                self.battleship_add_algorithm.setText(self._translate("App", "Добавить алгоритм"))
+                self.battleship_next.setDisabled(True)
+            else:
+                self.battleship_add_algorithm.setText(self._translate("App", "Поменять алгоритм"))
+                self.battleship_next.setDisabled(False)
+            self.battleshipSetCurrentPlayer(self.battleship_nickname_p1)
+            self.battleshipPaintStartCells(self.battleship_game_matrix_p1)
+            self.battleship_next.setText(self._translate("App", "Далее"))
+        if page == 2:
+            self.battleship_game_page.hide()
+            self.battleship_start_page.show()
+            if self.battleship_nickname_p2 == '':
+                self.battleship_add_algorithm.setText(self._translate("App", "Добавить алгоритм"))
+                self.battleship_next.setDisabled(True)
+            else:
+                self.battleship_add_algorithm.setText(self._translate("App", "Поменять алгоритм"))
+                self.battleship_next.setDisabled(False)
+            self.battleshipSetCurrentPlayer(self.battleship_nickname_p2)
+            self.battleshipPaintStartCells(self.battleship_game_matrix_p2)
+            self.battleship_next.setText(self._translate("App", "Старт"))
+        if page == 3:
+            self.battleshipPaintP1Cells()
+            self.battleshipPaintP2Cells()
+            self.battleship_start_page.hide()
+            self.battleship_game_page.show()
+            self.battleship_nickname_p1_label.setText(self._translate("App", f"{self.battleship_nickname_p1}"))
+            self.battleship_nickname_p2_label.setText(self._translate("App", f"{self.battleship_nickname_p2}"))
+
+    def battleshipComparator(self):
+        while self.battleship_end_game_result == '':
+            current_player = self.battleship_nickname_p1 if self.battleship_current_move == 'p1' else self.battleship_nickname_p2
+            self.battleship_current_fire.setText(self._translate("App", f"Стреляет: {current_player}"))
+
+            if self.battleship_current_move == 'p1':
+                x, y = self.battleship_algorithm_module_p1.algorithm(self.battleship_attack_matrix_p1)
+                if self.battleship_game_matrix_p2[x][y] == '-1':
+                    self.battleship_attack_matrix_p1[x][y] = '-'
+                else:
+                    self.battleship_attack_matrix_p1[x][y] = '+'
+                self.battleshipPaintP2Cell(x, y, self.battleship_attack_matrix_p1[x][y])
+
+            elif self.battleship_current_move == 'p2':
+                x, y = self.battleship_algorithm_module_p2.algorithm(self.battleship_attack_matrix_p2)
+                if self.battleship_game_matrix_p1[x][y] == '-1':
+                    self.battleship_attack_matrix_p2[x][y] = '-'
+                else:
+                    self.battleship_attack_matrix_p2[x][y] = '+'
+                self.battleshipPaintP1Cell(x, y, self.battleship_attack_matrix_p2[x][y])
+
+            self.battleshipNextMove()
+            self.battleshipCheckWin()
+            if not self.battleship_is_skip_game:
+                QTest.qWait(self.battleship_game_speed)
+
+    def battleshipCompare(self):
+        digits_check = lambda string: len([item for item in string if item.isdigit()]) != len(string)
+        zero_check = lambda string: string == '0'
+        def showIncorrectData(text):
+            self.battleship_compare.setDisabled(True)
+            self.showError(text)
+            QTest.qWait(100)#ms
+            self.battleship_compare.setDisabled(False)
+            return False
+
+        rounds = self.battleship_rounds_num.text()
+        if digits_check(rounds):
+            return showIncorrectData('Количество раундов должно быть целым положительным числом!')
+        if zero_check(rounds):
+            return showIncorrectData('Количество раундов не может равняться нулю!')
+
+        if rounds == '':
+            rounds = '1'
+        self.battleship_rounds = int(rounds)
+
+        self.battleship_game_back.setDisabled(True)
+        self.battleship_rounds_num.setDisabled(True)
+        self.battleship_step_by_step.setDisabled(True)
+        self.battleship_to_main_menu.setDisabled(True)
+        self.battleship_change_algorithms.setDisabled(True)
+
+        if self.battleship_step_by_step.isChecked():
+            self.battleshipStepByStepStartCompare()
+            return True
+
+        for i in range(self.battleship_rounds):
+            self.battleship_compare.setText(self._translate("App", "Завершить бой"))
+            self.battleship_compare.clicked.disconnect()
+            self.battleship_compare.clicked.connect(self.battleshipSkipGame)
+
+            self.battleshipComparator()
+
+            self.battleshipSetRoundWinner()
+
+            if not self.battleship_is_skip_game:
+                QTest.qWait(self.battleship_game_speed*10)
+            self.battleshipNextRound()
+
+            self.battleshipComparator()
+
+            self.battleshipSetRoundWinner()
+
+        self.battleshipShowWinners()
+
+        self.battleship_is_skip_game = False
+        self.battleship_compare.clicked.disconnect()
+        self.battleship_compare.clicked.connect(self.battleshipGameRestart)
+        self.battleship_compare.setText(self._translate("App", "Рестарт"))
+
+
+    def battleshipSkipGame(self):
+        self.battleship_is_skip_game = True
+
+    def battleshipGameRestart(self):
+        self.battleshipNextRound()
+        self.battleship_points_p1 = 0
+        self.battleship_points_p2 = 0
+        self.battleship_current_move = 'p1'
+        self.battleship_current_fire.setText('')
+        self.battleship_global_iterator = 0
+        self.battleship_game_back.setDisabled(False)
+        self.battleship_rounds_num.setDisabled(False)
+        self.battleship_step_by_step.setDisabled(False)
+        self.battleship_to_main_menu.setDisabled(False)
+        self.battleship_change_algorithms.setDisabled(False)
+        self.battleship_compare.setText(self._translate("App", "Начать бой"))
+        self.battleship_compare.clicked.disconnect()
+        self.battleship_compare.clicked.connect(self.battleshipCompare)
+
+    def battleshipStepByStepComparator(self):
+        current_player = self.battleship_nickname_p1 if self.battleship_current_move == 'p1' else self.battleship_nickname_p2
+        self.battleship_current_fire.setText(self._translate("App", f"Стреляет: {current_player}"))
+
+        if self.battleship_current_move == 'p1':
+            x, y = self.battleship_algorithm_module_p1.algorithm(self.battleship_attack_matrix_p1)
+            if self.battleship_game_matrix_p2[x][y] == '-1':
+                self.battleship_attack_matrix_p1[x][y] = '-'
+            else:
+                self.battleship_attack_matrix_p1[x][y] = '+'
+            self.battleshipPaintP2Cell(x, y, self.battleship_attack_matrix_p1[x][y])
+
+        elif self.battleship_current_move == 'p2':
+            x, y = self.battleship_algorithm_module_p2.algorithm(self.battleship_attack_matrix_p2)
+            if self.battleship_game_matrix_p1[x][y] == '-1':
+                self.battleship_attack_matrix_p2[x][y] = '-'
+            else:
+                self.battleship_attack_matrix_p2[x][y] = '+'
+            self.battleshipPaintP1Cell(x, y, self.battleship_attack_matrix_p2[x][y])
+
+        self.battleshipNextMove()
+        self.battleshipCheckWin()
+        if self.battleship_end_game_result != '':
+            self.battleshipStepByStepCompare()
+
+    def battleshipStepByStepCompare(self):
+        if self.battleship_end_game_result != '':
+            self.battleshipSetRoundWinner()
+            self.battleship_skip_sbs_game.setDisabled(True)
+            self.battleship_skip_sbs_round.setDisabled(True)
+
+            if self.battleship_global_iterator != 2 * self.battleship_rounds:
+                self.battleship_compare.setText(self._translate("App", "Следующий раунд"))
+                self.battleship_compare.clicked.disconnect()
+                self.battleship_compare.clicked.connect(self.battleshipStepByStepStartCompare)
+            else:
+                self.battleship_compare.setText(self._translate("App", "Показать результаты"))
+                self.battleship_compare.clicked.disconnect()
+                self.battleship_compare.clicked.connect(self.battleshipStepByStepEndCompare)
+
+            return False
+
+        self.battleship_compare.setText(self._translate("App", "Следующий шаг"))
+        self.battleship_compare.clicked.disconnect()
+        self.battleship_compare.clicked.connect(self.battleshipStepByStepComparator)
+        self.battleshipStepByStepComparator()
+
+    def battleshipStepByStepStartCompare(self):
+        if self.battleship_end_game_result != '':
+            self.battleshipNextRound()
+
+        self.battleship_skip_sbs_game.setDisabled(False)
+        self.battleship_skip_sbs_round.setDisabled(False)
+
+        self.battleship_compare.setText(self._translate("App", "Первый шаг"))
+        self.battleship_compare.clicked.disconnect()
+        self.battleship_compare.clicked.connect(self.battleshipStepByStepCompare)
+        self.battleship_global_iterator += 1
+
+        self.battleship_change_algorithms.hide()
+        self.battleship_skip_sbs_game.show()
+        self.battleship_skip_sbs_round.show()
+
+    def battleshipStepByStepEndCompare(self):
+        self.battleshipNextRound()
+        self.battleshipShowWinners()
+        self.battleship_compare.setText(self._translate("App", "Рестарт"))
+        self.battleship_compare.clicked.disconnect()
+        self.battleship_compare.clicked.connect(self.battleshipGameRestart)
+        self.battleship_change_algorithms.show()
+        self.battleship_skip_sbs_game.hide()
+        self.battleship_skip_sbs_round.hide()
+
+    def battleshipSkipSbsRound(self):
+        while self.battleship_end_game_result == '':
+            self.battleship_compare.click()
+
+    def battleshipSkipSbsGame(self):
+        while self.battleship_compare.text() != 'Показать результаты':
+            self.battleship_compare.click()
+        self.battleship_compare.click()
+
+    def battleshipOpenFile(self):
+        nickname_availability, confirm, nickname = True, False, ''
+        while nickname_availability:
+            nickname, confirm = QInputDialog.getText(self, 'Ввод', 'Название алгоритма:',
+                                                     text=f'Algorithm{self.battleship_current_page}')
+            if not confirm:
+                break
+
+            if nickname == '':
+                self.showError('Название алгоритма не может быть пустым!')
+                nickname_availability = True
+            elif self.battleship_current_page == 1 and nickname == self.battleship_nickname_p2:
+                self.showError('Название алгоритма занято!')
+                nickname_availability = True
+            elif self.battleship_current_page == 2 and nickname == self.battleship_nickname_p1:
+                self.showError('Название алгоритма занято!')
+                nickname_availability = True
+            else:
+                nickname_availability = False
+
+        if confirm:
+            error, algorithm_file = True, ''
+
+            while error:
+                algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
+                if algorithm_file != '':
+                    with open(algorithm_file, 'r') as file:
+                        if not 'def' in file.read():
+                            self.showError('Несоответствие формата файла-алгоритма!')
+                        else:
+                            error = False
+                else:
+                    error = False
+
+            if algorithm_file != '':
+                if not algorithm_file in sys.path:
+                    sys.path.insert(0, algorithm_file)
+                file_name = QUrl.fromLocalFile(algorithm_file).fileName().split('.')[0]
+
+                self.battleshipClearField()
+                self.battleship_current_matrix = [['-1'] * 10 for i in range(10)]
+                self.battleship_next.setDisabled(True)
+
+                if self.battleship_current_page == 1:
+                    self.battleshipAddAlgorithm1(file_name, nickname)
+                else:
+                    self.battleshipAddAlgorithm2(file_name, nickname)
+
+
+    def battleshipAddAlgorithm1(self, file_name, nickname):
+        self.battleship_algorithm_module_p1 = importlib.import_module(f'algorithms.battleship.{file_name}')
+        ships = self.battleship_algorithm_module_p1.shipsPlacement()
+        self.battleship_nickname_p1 = nickname
+        self.battleshipSetCurrentPlayer(self.battleship_nickname_p1)
+
+        if self.placeShipsOnField(ships):
+            self.battleship_game_matrix_p1 = self.battleship_current_matrix
+            self.battleship_next.setDisabled(False)
+        self.battleship_add_algorithm.setText(self._translate("App", "Поменять алгоритм"))
+
+
+    def battleshipAddAlgorithm2(self, file_name, nickname):
+        self.battleship_algorithm_module_p2 = importlib.import_module(f'algorithms.battleship.{file_name}')
+        ships = self.battleship_algorithm_module_p2.shipsPlacement()
+        self.battleship_nickname_p2 = nickname
+        self.battleshipSetCurrentPlayer(self.battleship_nickname_p2)
+
+        if self.placeShipsOnField(ships):
+            self.battleship_game_matrix_p2 = self.battleship_current_matrix
+            self.battleship_next.setDisabled(False)
+        self.battleship_add_algorithm.setText(self._translate("App", "Поменять алгоритм"))
+
+    def battleshipChangeGameSpeed(self, speed_object):
+        self.battleship_bar_speed_very_fast.setDisabled(False), self.battleship_bar_speed_fast.setDisabled(False),
+        self.battleship_bar_speed_very_slow.setDisabled(False), self.battleship_bar_speed_slow.setDisabled(False),
+        self.battleship_bar_speed_normal.setDisabled(False)
+        speed_object.setDisabled(True)
+        self.battleship_game_speed = self.battleship_game_speed_dir[speed_object.text()]
 
     # -------Battleship-Functions-End----------#
 
@@ -153,8 +472,8 @@ class App(QMainWindow, AppUi, AppScripts):
 
     def tictactoeComparator(self, first_player, second_player, alg_num1, alg_num2):
         #print(' - tictactoeComparator run')
-        first_algorithm_module = importlib.import_module(f'algorithms.{self.ttt_algorithms_array[alg_num1]}')
-        second_algorithm_module = importlib.import_module(f'algorithms.{self.ttt_algorithms_array[alg_num2]}')
+        first_algorithm_module = importlib.import_module(f'algorithms.tictactoe.{self.ttt_algorithms_array[alg_num1]}')
+        second_algorithm_module = importlib.import_module(f'algorithms.tictactoe.{self.ttt_algorithms_array[alg_num2]}')
         while self.ttt_end_game_result == '':
             if self.ttt_current_player == first_player:
                 self.ttt_game_matrix = first_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
@@ -278,8 +597,8 @@ class App(QMainWindow, AppUi, AppScripts):
     def tictactoeStepByStepComparator(self, first_player, second_player, alg_num1, alg_num2):
         #print(' - tictactoeStepByStepComparator run')
         if self.ttt_end_game_result == '':
-            first_algorithm_module = importlib.import_module(f'algorithms.{self.ttt_algorithms_array[alg_num1]}')
-            second_algorithm_module = importlib.import_module(f'algorithms.{self.ttt_algorithms_array[alg_num2]}')
+            first_algorithm_module = importlib.import_module(f'algorithms.tictactoe.{self.ttt_algorithms_array[alg_num1]}')
+            second_algorithm_module = importlib.import_module(f'algorithms.tictactoe.{self.ttt_algorithms_array[alg_num2]}')
             if self.ttt_current_player == first_player:
                 self.ttt_game_matrix = first_algorithm_module.algorithm(self.ttt_game_matrix, self.ttt_height,
                                                                         self.ttt_width, first_player, self.ttt_win_cnt)
