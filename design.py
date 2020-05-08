@@ -149,6 +149,10 @@ class AppUi(AppScripts):
 
         self.verticalLayout_Body.addWidget(self.battleship_start_page)
 
+        QtCore.QMetaObject.connectSlotsByName(App)
+        App.setTabOrder(self.battleship_add_algorithm, self.battleship_next)
+        App.setTabOrder(self.battleship_next, self.battleship_back)
+
         self.battleship_current_player.setText(self._translate("App", "Поле игрока"))
         self.battleship_back.setText(self._translate("App", "Назад"))
         self.battleship_add_algorithm.setText(self._translate("App", "Добавить алгоритм"))
@@ -319,11 +323,13 @@ class AppUi(AppScripts):
         self.battleship_results = QtWidgets.QPlainTextEdit(self.battleship_game_page)
         self.battleship_results.setMaximumSize(QtCore.QSize(16777215, 100))
         self.battleship_results.setObjectName("battleship_results")
+        self.battleship_results.setFocusPolicy(QtCore.Qt.NoFocus)
         self.battleship_results.setReadOnly(True)
         self.battleship_game_menu.addWidget(self.battleship_results, 2, 2, 1, 1)
 
         self.battleship_step_by_step = QtWidgets.QCheckBox(self.battleship_game_page)
         self.battleship_step_by_step.setObjectName("battleship_step_by_step")
+        self.battleship_step_by_step.setFocusPolicy(QtCore.Qt.NoFocus)
         self.battleship_game_menu.addWidget(self.battleship_step_by_step, 2, 3, 1, 1, QtCore.Qt.AlignBottom)
 
         spacer_item = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -331,28 +337,34 @@ class AppUi(AppScripts):
 
         self.battleship_compare = QtWidgets.QPushButton(self.battleship_game_page)
         self.battleship_compare.setObjectName("battleship_compare")
+        self.battleship_compare.setAutoDefault(True)
         self.battleship_game_menu.addWidget(self.battleship_compare, 3, 3, 1, 1)
 
         self.battleship_change_algorithms = QtWidgets.QPushButton(self.battleship_game_page)
         self.battleship_change_algorithms.setObjectName("battleship_change_algorithms")
+        self.battleship_change_algorithms.setAutoDefault(True)
         self.battleship_game_menu.addWidget(self.battleship_change_algorithms, 3, 4, 1, 1)
 
         self.battleship_skip_sbs_round = QtWidgets.QPushButton(self.battleship_game_page)
         self.battleship_skip_sbs_round.setObjectName("battleship_skip_sbs_round")
+        self.battleship_skip_sbs_round.setAutoDefault(True)
         self.battleship_game_menu.addWidget(self.battleship_skip_sbs_round, 3, 4, 1, 1)
         self.battleship_skip_sbs_round.hide()
 
         self.battleship_skip_sbs_game = QtWidgets.QPushButton(self.battleship_game_page)
         self.battleship_skip_sbs_game.setObjectName("battleship_skip_sbs_game")
+        self.battleship_skip_sbs_game.setAutoDefault(True)
         self.battleship_game_menu.addWidget(self.battleship_skip_sbs_game, 2, 4, 1, 1, QtCore.Qt.AlignBottom)
         self.battleship_skip_sbs_game.hide()
 
         self.battleship_to_main_menu = QtWidgets.QPushButton(self.battleship_game_page)
         self.battleship_to_main_menu.setObjectName("battleship_to_main_menu")
+        self.battleship_to_main_menu.setAutoDefault(True)
         self.battleship_game_menu.addWidget(self.battleship_to_main_menu, 3, 0, 1, 1)
 
         self.battleship_game_back = QtWidgets.QPushButton(self.battleship_game_page)
         self.battleship_game_back.setObjectName("battleship_game_back")
+        self.battleship_game_back.setAutoDefault(True)
         self.battleship_game_menu.addWidget(self.battleship_game_back, 3, 1, 1, 1)
 
         self.battleship_rounds_num = QtWidgets.QLineEdit(self.battleship_game_page)
@@ -372,6 +384,12 @@ class AppUi(AppScripts):
 
         self.battleship_menu_bar_speed = QtWidgets.QMenu(self.battleship_menu_bar)
         self.battleship_menu_bar_speed.setObjectName("battleship_menu_bar_speed")
+
+        QtCore.QMetaObject.connectSlotsByName(App)
+        App.setTabOrder(self.battleship_compare, self.battleship_change_algorithms)
+        App.setTabOrder(self.battleship_change_algorithms, self.battleship_rounds_num)
+        App.setTabOrder(self.battleship_rounds_num, self.battleship_game_back)
+        App.setTabOrder(self.battleship_game_back, self.battleship_to_main_menu)
 
         App.setMenuBar(self.battleship_menu_bar)
 
