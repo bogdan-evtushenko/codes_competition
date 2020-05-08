@@ -171,20 +171,38 @@ class AppUi(AppScripts):
 
         for ship in ships:
             size, coords, route = ship
+
+            if size > 4:
+                self.showError('Размер корабля не может быть больше 4!')
+                return False
+            elif size < 1:
+                self.showError('Размер корабля не может быть меньше 1!')
+                return False
+
             x, y = coords
 
-            for i in range(size):
-                if matrix[x][y] != '-1':
-                    self.showError('Нельзя ставить корабли в одинаковые координаты!')
-                    return False
+            if x > 9:
+                self.showError('Координата X не может быть больше 9!')
+                return False
+            elif x < 0:
+                self.showError('Координата X не может быть меньше 0!')
+                return False
+            elif y > 9:
+                self.showError('Координата Y не может быть больше 9!')
+                return False
+            elif y < 0:
+                self.showError('Координата Y не может быть меньше 0!')
+                return False
 
+            for i in range(size):
                 matrix[x][y] = str(size)
                 y += routes[route] if route == 'right' or route == 'left' else 0
                 x += routes[route] if route == 'top' or route == 'bottom' else 0
 
         self.battleshipPaintStartCells(matrix)
-        if not self.battleshipCorrectCheck(matrix):
-            self.showError('Расстояние между кораблями должно быть не меньше единицы!')
+        result, message = self.battleshipCorrectCheck(matrix)
+        if not result:
+            self.showError(message)
             return False
 
         self.battleship_current_matrix = matrix

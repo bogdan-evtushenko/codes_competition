@@ -14,6 +14,9 @@ def shipsPlacement():
     )
 
 def algorithm(matrix):
+    # matrix[x][y] == '-1' - empty
+    # matrix[x][y] == '-' - miss
+    # matrix[x][y] == '+' - hit
     for x in range(10):
         for y in range(10):
             if matrix[x][y] == '-1':

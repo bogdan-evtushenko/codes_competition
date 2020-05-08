@@ -1,4 +1,5 @@
 import numpy
+import math
 
 class AppScripts(object):
     def __init__(self):
@@ -71,15 +72,37 @@ class AppScripts(object):
     def battleshipCorrectCheck(self, matrix):
         height, width = len(matrix), len(matrix[0])
 
+        four_count = 0
+        three_count = 0
+        two_count = 0
+        one_count = 0
+        for row in matrix:
+            four_count += row.count('4')
+            three_count += row.count('3')
+            two_count += row.count('2')
+            one_count += row.count('1')
+
+        if math.ceil(four_count/4) != 1:
+            return [False, 'Количество кораблей на 4 клетки должно быть 1!']
+
+        if math.ceil(three_count/3) != 2:
+            return [False, 'Количество кораблей на 3 клетки должно быть 2!']
+
+        if math.ceil(two_count/2) != 3:
+            return [False, 'Количество кораблей на 2 клетки должно быть 3!']
+
+        if one_count != 4:
+            return [False, 'Количество кораблей на 1 клетку должно быть 4!']
+
         for i in range(height):
             for j in range(width - 1):
                 if matrix[i][j] != matrix[i][j+1] and matrix[i][j+1] != '-1' and matrix[i][j] != '-1':
-                    return False
+                    return [False, 'Расстояние между кораблями должно быть не меньше единицы!']
 
         for j in range(width):
             for i in range(height - 1):
                 if matrix[i][j] != matrix[i+1][j] and matrix[i+1][j] != '-1' and matrix[i][j] != '-1':
-                    return False
+                    return [False, 'Расстояние между кораблями должно быть не меньше единицы!']
 
         matrix = numpy.array(matrix)
         diagonals = [matrix[::-1, :].diagonal(i) for i in range(-1 * (width - 1), width)]
@@ -88,9 +111,9 @@ class AppScripts(object):
         for diagonal in diagonals:
             for i in range(len(diagonal) - 1):
                 if diagonal[i] != diagonal[i+1] and diagonal[i+1] != '-1' and diagonal[i] != '-1':
-                    return False
+                    return [False, 'Расстояние между кораблями должно быть не меньше единицы!']
 
-        return True
+        return [True, '']
 
     def battleshipGetHitCount(self, matrix):
         hit_count = 0
