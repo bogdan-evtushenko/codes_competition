@@ -194,7 +194,15 @@ class AppUi(AppScripts):
                 self.showError('Координата Y не может быть меньше 0!')
                 return False
 
+            if not any([r==route for r in ['left', 'right', 'top', 'bottom']]):
+                self.showError('Направление корабля указано некорректно!')
+                return False
+
             for i in range(size):
+                if x < 0 or y < 0:
+                    self.showError('Корабль выходит за пределы поля!')
+                    return False
+
                 matrix[x][y] = str(size)
                 y += routes[route] if route == 'right' or route == 'left' else 0
                 x += routes[route] if route == 'top' or route == 'bottom' else 0

@@ -323,7 +323,8 @@ class App(QMainWindow, AppUi, AppScripts):
                 algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
                 if algorithm_file != '':
                     with open(algorithm_file, 'r') as file:
-                        if not 'def' in file.read():
+                        read = file.read()
+                        if not 'def shipsPlacement()' in read or not 'def algorithm(matrix)' in read:
                             self.showError('Несоответствие формата файла-алгоритма!')
                         else:
                             error = False
