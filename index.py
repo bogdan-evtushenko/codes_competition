@@ -106,6 +106,7 @@ class App(QMainWindow, AppUi, AppScripts):
             self.battleshipPaintStartCells(self.battleship_game_matrix_p2)
             self.battleship_next.setText(self._translate("App", "Старт"))
         if page == 3:
+            self.battleshipGameRestart()
             self.battleshipPaintP1Cells()
             self.battleshipPaintP2Cells()
             self.battleship_start_page.hide()
@@ -151,9 +152,9 @@ class App(QMainWindow, AppUi, AppScripts):
 
         rounds = self.battleship_rounds_num.text()
         if digits_check(rounds):
-            return showIncorrectData('Количество раундов должно быть целым положительным числом!')
+            return showIncorrectData('Количество боев должно быть целым положительным числом!')
         if zero_check(rounds):
-            return showIncorrectData('Количество раундов не может равняться нулю!')
+            return showIncorrectData('Количество боев не может равняться нулю!')
 
         if rounds == '':
             rounds = '1'
@@ -170,7 +171,7 @@ class App(QMainWindow, AppUi, AppScripts):
             return True
 
         for i in range(self.battleship_rounds):
-            self.battleship_compare.setText(self._translate("App", "Завершить бой"))
+            self.battleship_compare.setText(self._translate("App", "Завершить войну"))
             self.battleship_compare.clicked.disconnect()
             self.battleship_compare.clicked.connect(self.battleshipSkipGame)
 
@@ -209,7 +210,7 @@ class App(QMainWindow, AppUi, AppScripts):
         self.battleship_step_by_step.setDisabled(False)
         self.battleship_to_main_menu.setDisabled(False)
         self.battleship_change_algorithms.setDisabled(False)
-        self.battleship_compare.setText(self._translate("App", "Начать бой"))
+        self.battleship_compare.setText(self._translate("App", "Начать войну"))
         self.battleship_compare.clicked.disconnect()
         self.battleship_compare.clicked.connect(self.battleshipCompare)
 
@@ -245,7 +246,7 @@ class App(QMainWindow, AppUi, AppScripts):
             self.battleship_skip_sbs_round.setDisabled(True)
 
             if self.battleship_global_iterator != 2 * self.battleship_rounds:
-                self.battleship_compare.setText(self._translate("App", "Следующий раунд"))
+                self.battleship_compare.setText(self._translate("App", "Следующий бой"))
                 self.battleship_compare.clicked.disconnect()
                 self.battleship_compare.clicked.connect(self.battleshipStepByStepStartCompare)
             else:

@@ -448,15 +448,16 @@ class AppUi(AppScripts):
 
         self.battleship_nickname_p1_label.setText(self._translate("App", "Ник1"))
         self.battleship_nickname_p2_label.setText(self._translate("App", "Ник2"))
-        self.battleship_compare.setText(self._translate("App", "Начать бой"))
+        self.battleship_results.setPlainText(self._translate("App", "Результаты"))
+        self.battleship_compare.setText(self._translate("App", "Начать войну"))
         self.battleship_step_by_step.setText(self._translate("App", "Пошаговый режим"))
         self.battleship_current_fire.setText(self._translate("App", ""))
         self.battleship_game_back.setText(self._translate("App", "Назад"))
-        self.battleship_rounds_num.setPlaceholderText(self._translate("App", "Количество раундов (по умолчанию 1)"))
+        self.battleship_rounds_num.setPlaceholderText(self._translate("App", "Количество боев (по умолчанию 1)"))
         self.battleship_change_algorithms.setText(self._translate("App", "Поменять алгоритмы"))
         self.battleship_to_main_menu.setText(self._translate("App", "Меню"))
-        self.battleship_skip_sbs_round.setText(self._translate("App", "Завершить раунд"))
-        self.battleship_skip_sbs_game.setText(self._translate("App", "Завершить бой"))
+        self.battleship_skip_sbs_round.setText(self._translate("App", "Завершить бой"))
+        self.battleship_skip_sbs_game.setText(self._translate("App", "Завершить войну"))
 
     def battleshipPaintP1Cells(self):
         for i in range(10):
@@ -514,7 +515,7 @@ class AppUi(AppScripts):
         self.battleshipPaintP1Cells()
         self.battleshipPaintP2Cells()
         self.battleship_end_game_result = ''
-        self.battleship_results.setPlainText(self._translate("App", ""))
+        self.battleship_results.setPlainText(self._translate("App", "Результаты"))
 
     def battleshipCheckWin(self):
         if self.battleshipGetHitCount(self.battleship_attack_matrix_p1) == 20:
@@ -531,6 +532,8 @@ class AppUi(AppScripts):
             self.battleship_points_p2 += 1
 
     def battleshipShowWinners(self):
+        self.battleship_to_main_menu.setDisabled(False)
+        self.battleship_game_back.setDisabled(False)
         if self.battleship_points_p1 > self.battleship_points_p2:
             winner = f'{self.battleship_nickname_p1} - Победитель!'
         elif self.battleship_points_p1 < self.battleship_points_p2:
