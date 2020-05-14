@@ -189,16 +189,10 @@
        </item>
        <item>
         <layout class="QGridLayout" name="tictactoe_edit_menu">
-         <item row="1" column="2">
-          <widget class="QPushButton" name="ttt_add_algorithm">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Сравнить алгоритмы</string>
+         <item row="1" column="0" rowspan="2">
+          <widget class="QPlainTextEdit" name="ttt_algorithm_list">
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -212,24 +206,41 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="ttt_game_back">
-           <property name="text">
-            <string>Назад</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" rowspan="2">
-          <widget class="QPlainTextEdit" name="ttt_algorithm_list">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="1">
           <widget class="QPushButton" name="ttt_restart">
            <property name="text">
             <string>Рестарт</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <layout class="QHBoxLayout" name="ttt_edit_layout">
+           <item>
+            <widget class="QPushButton" name="ttt_game_back">
+             <property name="text">
+              <string>Назад</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="ttt_to_main_menu">
+             <property name="text">
+              <string>Меню</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="ttt_add_algorithm">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Сравнить алгоритмы</string>
            </property>
           </widget>
          </item>
