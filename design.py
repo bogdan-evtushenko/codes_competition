@@ -741,10 +741,12 @@ class AppUi(AppScripts):
 
         self.ttt_game_back = QtWidgets.QPushButton(self.tictactoe_game_page)
         self.ttt_game_back.setObjectName("ttt_game_back")
+        self.ttt_game_back.setAutoDefault(True)
         self.ttt_edit_layout.addWidget(self.ttt_game_back)
 
         self.ttt_to_main_menu = QtWidgets.QPushButton(self.tictactoe_game_page)
         self.ttt_to_main_menu.setObjectName("ttt_to_main_menu")
+        self.ttt_to_main_menu.setAutoDefault(True)
         self.ttt_edit_layout.addWidget(self.ttt_to_main_menu)
 
         self.tictactoe_edit_menu.addLayout(self.ttt_edit_layout, 2, 2, 1, 1)
