@@ -536,6 +536,7 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.ttt_compare.setDisabled(True)
         self.ttt_game_back.setDisabled(True)
+        self.ttt_to_main_menu.setDisabled(True)
         self.ttt_restart.setDisabled(True)
         self.ttt_delete_all_algorithms.setDisabled(True)
         self.ttt_step_by_step_mode.setDisabled(True)
@@ -581,6 +582,7 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_add_algorithm.clicked.disconnect()
         self.ttt_add_algorithm.clicked.connect(self.tictactoeOpenFile)
         self.ttt_game_back.setDisabled(False)
+        self.ttt_to_main_menu.setDisabled(False)
         self.ttt_restart.setDisabled(False)
         self.ttt_delete_all_algorithms.setDisabled(False)
 
@@ -691,6 +693,7 @@ class App(QMainWindow, AppUi, AppScripts):
                             self.ttt_add_algorithm.show()
 
                             self.ttt_game_back.setDisabled(False)
+                            self.ttt_to_main_menu.setDisabled(False)
                             self.ttt_restart.setDisabled(False)
                             self.ttt_delete_all_algorithms.setDisabled(False)
                             self.ttt_step_by_step_mode.setDisabled(False)
@@ -727,6 +730,7 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.ttt_add_algorithm.setDisabled(True)
         self.ttt_game_back.setDisabled(True)
+        self.ttt_to_main_menu.setDisabled(True)
         self.ttt_restart.setDisabled(True)
         self.ttt_delete_all_algorithms.setDisabled(True)
         self.ttt_step_by_step_mode.setDisabled(True)
@@ -815,6 +819,7 @@ class App(QMainWindow, AppUi, AppScripts):
         self.ttt_compare.setDisabled(False)
         self.ttt_add_algorithm.setDisabled(False)
         self.ttt_game_back.setDisabled(False)
+        self.ttt_to_main_menu.setDisabled(False)
         self.ttt_restart.setDisabled(False)
         self.ttt_step_by_step_mode.setDisabled(False)
 
