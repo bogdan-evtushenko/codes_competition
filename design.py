@@ -548,11 +548,16 @@ class AppUi(AppScripts):
             winner = f'{self.battleship_nickname_p2} - Победитель!'
         else:
             winner = f'Ничья'
-        self.battleship_results.setPlainText(self._translate("App", f"{winner}\n"
-                                                                    f"{self.battleship_nickname_p1}"
-                                                                    f" - {self.battleship_points_p1} баллов\n"
-                                                                    f"{self.battleship_nickname_p2}"
-                                                                    f" - {self.battleship_points_p2} баллов"))
+
+        rating = ''
+        if self.battleship_points_p1 >= self.battleship_points_p2:
+            rating =  f"{self.battleship_nickname_p1}"f" - {self.battleship_points_p1} баллов\n" \
+                        f"{self.battleship_nickname_p2}"f" - {self.battleship_points_p2} баллов"
+        else:
+            rating = f"{self.battleship_nickname_p2}"f" - {self.battleship_points_p2} баллов\n" \
+                     f"{self.battleship_nickname_p1}"f" - {self.battleship_points_p1} баллов"
+
+        self.battleship_results.setPlainText(self._translate("App", f"{winner}\n{rating}"))
 
     #-----------------------------Battleship-Game-Page-End-------------------------------------#
 
