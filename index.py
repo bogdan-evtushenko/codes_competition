@@ -307,6 +307,9 @@ class App(QMainWindow, AppUi, AppScripts):
             if nickname == '':
                 self.showError('Название алгоритма не может быть пустым!')
                 nickname_availability = True
+            elif len(nickname) == nickname.count(' '):
+                self.showError('Название алгоритма не может состоять только из пробелов!')
+                nickname_availability = True
             elif self.battleship_current_page == 1 and nickname == self.battleship_nickname_p2:
                 self.showError('Название алгоритма занято!')
                 nickname_availability = True
@@ -823,6 +826,9 @@ class App(QMainWindow, AppUi, AppScripts):
                 nickname_availability = True
             elif nickname == '':
                 self.showError('Название алгоритма не может быть пустым!')
+                nickname_availability = True
+            elif len(nickname) == nickname.count(' '):
+                self.showError('Название алгоритма не может состоять только из пробелов!')
                 nickname_availability = True
             else:
                 nickname_availability = False
