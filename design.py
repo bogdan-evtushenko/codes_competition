@@ -407,6 +407,7 @@ class AppUi(AppScripts):
         self.battleship_menu_bar = QtWidgets.QMenuBar(App)
         self.battleship_menu_bar.setGeometry(QtCore.QRect(0, 0, 533, 21))
         self.battleship_menu_bar.setObjectName("battleship_menu_bar")
+        self.battleship_menu_bar.hide()
 
         self.battleship_menu_bar_speed = QtWidgets.QMenu(self.battleship_menu_bar)
         self.battleship_menu_bar_speed.setObjectName("battleship_menu_bar_speed")

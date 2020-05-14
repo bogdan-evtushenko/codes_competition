@@ -69,8 +69,8 @@ class App(QMainWindow, AppUi, AppScripts):
         self.battleshipRoutes()
 
     def battleshipToMainMenu(self):
-        self.battleship_game_page.hide()
-        self.start_page.show()
+        self.battleship_current_page = 0
+        self.battleshipRoutes()
 
     def battleshipChangeAlgorithms(self):
         self.battleship_current_page = 1
@@ -81,9 +81,12 @@ class App(QMainWindow, AppUi, AppScripts):
         if page == 0:
             self.start_page.show()
             self.battleship_start_page.hide()
+            self.battleship_game_page.hide()
+            self.battleship_menu_bar.hide()
         if page == 1:
             self.battleship_game_page.hide()
             self.battleship_start_page.show()
+            self.battleship_menu_bar.hide()
             if self.battleship_nickname_p1 == '':
                 self.battleship_add_algorithm.setText(self._translate("App", "Добавить алгоритм"))
                 self.battleship_next.setDisabled(True)
@@ -96,6 +99,7 @@ class App(QMainWindow, AppUi, AppScripts):
         if page == 2:
             self.battleship_game_page.hide()
             self.battleship_start_page.show()
+            self.battleship_menu_bar.hide()
             if self.battleship_nickname_p2 == '':
                 self.battleship_add_algorithm.setText(self._translate("App", "Добавить алгоритм"))
                 self.battleship_next.setDisabled(True)
@@ -111,6 +115,7 @@ class App(QMainWindow, AppUi, AppScripts):
             self.battleshipPaintP2Cells()
             self.battleship_start_page.hide()
             self.battleship_game_page.show()
+            self.battleship_menu_bar.show()
             self.battleship_nickname_p1_label.setText(self._translate("App", f"{self.battleship_nickname_p1}"))
             self.battleship_nickname_p2_label.setText(self._translate("App", f"{self.battleship_nickname_p2}"))
 
