@@ -323,7 +323,8 @@ class App(QMainWindow, AppUi, AppScripts):
             error, algorithm_file = True, ''
 
             while error:
-                algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
+                algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "algorithms/battleship",
+                                                                "Algorithm File (*.py)")
                 if algorithm_file != '':
                     with open(algorithm_file, 'r') as file:
                         read = file.read()
@@ -851,7 +852,8 @@ class App(QMainWindow, AppUi, AppScripts):
             error, algorithm_file = True, ''
 
             while error:
-                algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "~", "Algorithm File (*.py)")
+                algorithm_file, _ = QFileDialog.getOpenFileName(self, "Open Algorithm", "algorithms/tictactoe",
+                                                                "Algorithm File (*.py)")
                 if algorithm_file != '':
                     with open(algorithm_file, 'r') as file:
                         if not 'def algorithm(matrix, height, width, player, winCount):' in file.read():
