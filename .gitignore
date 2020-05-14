@@ -1,3 +1,5 @@
 /.idea
 /__pycache__
 /algorithms/__pycache__
+/algorithms/__pycache__/battleship
+/algorithms/__pycache__/tictactoe
