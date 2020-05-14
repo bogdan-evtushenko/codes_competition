@@ -736,10 +736,18 @@ class AppUi(AppScripts):
         self.ttt_restart.setAutoDefault(True)
         self.tictactoe_edit_menu.addWidget(self.ttt_restart, 2, 1, 1, 1)
 
+        self.ttt_edit_layout = QtWidgets.QHBoxLayout()
+        self.ttt_edit_layout.setObjectName("ttt_edit_layout")
+
         self.ttt_game_back = QtWidgets.QPushButton(self.tictactoe_game_page)
         self.ttt_game_back.setObjectName("ttt_game_back")
-        self.ttt_game_back.setAutoDefault(True)
-        self.tictactoe_edit_menu.addWidget(self.ttt_game_back, 2, 2, 1, 1)
+        self.ttt_edit_layout.addWidget(self.ttt_game_back)
+
+        self.ttt_to_main_menu = QtWidgets.QPushButton(self.tictactoe_game_page)
+        self.ttt_to_main_menu.setObjectName("ttt_to_main_menu")
+        self.ttt_edit_layout.addWidget(self.ttt_to_main_menu)
+
+        self.tictactoe_edit_menu.addLayout(self.ttt_edit_layout, 2, 2, 1, 1)
 
         self.ttt_algorithm_list = QtWidgets.QPlainTextEdit(self.tictactoe_game_page)
         self.ttt_algorithm_list.setMaximumHeight(110)
@@ -801,6 +809,7 @@ class AppUi(AppScripts):
         self.ttt_compare.setText(self._translate("App", "Сравнить алгоритмы"))
         self.ttt_compare_disabled.setText(self._translate("App", "Следующий шаг"))
         self.ttt_game_back.setText(self._translate("App", "Назад"))
+        self.ttt_to_main_menu.setText(self._translate("App", "Меню"))
         self.ttt_restart.setText(self._translate("App", "Рестарт"))
         self.ttt_delete_all_algorithms.setText(self._translate("App", "Удалить все алгоритмы"))
         self.ttt_speed_menu.setTitle(self._translate("App", "Скорость"))

@@ -462,6 +462,7 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.ttt_compare.clicked.connect(self.tictactoeCompare)
         self.ttt_game_back.clicked.connect(self.tictactoeGameBack)
+        self.ttt_to_main_menu.clicked.connect(self.tictactoeToMainMenu)
         self.ttt_restart.clicked.connect(self.tictactoeGameRestart)
         self.ttt_add_algorithm.clicked.connect(self.tictactoeOpenFile)
         self.ttt_delete_all_algorithms.clicked.connect(self.tictactoeDeleteAllAlgorithms)
@@ -787,6 +788,10 @@ class App(QMainWindow, AppUi, AppScripts):
 
         self.tictactoe_start_page.show()
         self.tictactoe_game_page.hide()
+
+    def tictactoeToMainMenu(self):
+        self.tictactoeGameBack()
+        self.tictactoeBack()
 
     def tictactoeGameRestart(self):
         self.tictactoeSetDefaultValues()
