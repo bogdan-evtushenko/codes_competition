@@ -429,6 +429,8 @@ class App(QMainWindow, AppUi, AppScripts):
             return showIncorrectData('Ширина не может равняться нулю!')
         if one_check(width):
             return showIncorrectData('Ширина не может равняться единице!')
+        if int(width) >= 50:
+            return showIncorrectData('Ширина не может быть больше 50!')
 
         if digits_check(height):
             return showIncorrectData('Высота должна быть целым положительным числом!')
@@ -436,6 +438,8 @@ class App(QMainWindow, AppUi, AppScripts):
             return showIncorrectData('Высота не может равняться нулю!')
         if one_check(height):
             return showIncorrectData('Высота не может равняться единице!')
+        if int(height) >= 50:
+            return showIncorrectData('Высота не может быть больше 50!')
 
         if digits_check(win_cnt):
             return showIncorrectData('Количество подряд идущих для победы должно быть '
